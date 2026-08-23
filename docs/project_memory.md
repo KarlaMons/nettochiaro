@@ -2,25 +2,27 @@
 
 ## Current State
 
-- **Project**: NettoChiaro — 2025 Milan RAL-to-net calculator prototype for Jet HR
-- **Phase**: Planning — written specification prepared, awaiting user review
-- **Last Completed**: Approved design captured in planning and design documents
-- **Next Step**: Review `docs/superpowers/specs/2026-08-23-nettochiaro-design.md`; after approval, create the implementation plan
+- **Project**: JetHR 2026 RAL-to-net calculator.
+- **Phase**: Execution; the clean React + TypeScript + Vite foundation is in place.
+- **Last Completed Work Unit**: IT-01 — Vite application scaffold.
+- **Next Step**: Wait for approval of the next work unit before adding fiscal logic, product UI, Docker, or deployment.
 
-## Blockers
+## Scope and Decisions
 
-- Implementation is gated on user approval of the written specification.
-- Production hostname, private GitHub repository, and EasyPanel project are deferred until deployment.
+- The obsolete 2025 planning-first Next.js scaffold has been superseded.
+- The app is client-only at this stage, with no backend, persistence, authentication, Docker, tax formulas, or final product UI.
+- Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
+- `CLAUDE.md` remains the engineering governance source. `AGENTS.md` and `README.md` are intentionally unchanged in IT-01.
 
-## Recent Changes
+## Blockers and Pending Decisions
 
-- Initialized Git.
-- Reframed the product around fiscal-domain logic and removed runtime AI.
-- Defined 2025 assumptions, deterministic formulas, transparent UX, Next.js architecture, testing, and deployment.
+- None for the completed IT-01 foundation.
+- Fiscal requirements and subsequent implementation units remain subject to explicit approval.
 
-## Key Context for Next Session
+## Key Files
 
-- Always read this file, `implementation/task_tracker.md`, and `design/design_summary.md` first.
-- No application code exists and written-spec approval is still required.
-- The evaluation objective is explaining why each fiscal rule applies, not demonstrating AI-generated output.
-- Official sources are versioned into the rule catalog; runtime never fetches tax data.
+- `design/design_summary.md`
+- `implementation/task_tracker.md`
+- `docs/work_log.md`
+- `package.json`
+- `src/`
