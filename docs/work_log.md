@@ -18,3 +18,13 @@
 
 - Enabled npm strict engine checks and aligned `@types/node` with the pinned Node.js 24 development runtime.
 - Reverification: `npm run typecheck`, `npm run lint`, `npm test` (1 file, 1 test), and `npm run build` all passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+## 2026-08-23 — IT-02: Deterministic 2026 Salary Engine
+
+- **Status**: Completed.
+- **Scope**: Added the approved annual full-precision engine for a standard private non-manager permanent full-time employee in Milano/Lombardia, with supported RAL from EUR 25,000 through EUR 100,000 and 13 or 14 monthly payments. The final product UI, Docker, deployment, `README.md`, and `AGENTS.md` were not changed.
+- **TDD evidence**: The first test run failed because all eight new engine/utility modules were absent. After implementation and correction of two over-specified test literals, all nine test files and 53 tests passed.
+- **Implementation**: Centralized immutable 2026 constants, progressive brackets, scenario metadata, and precision policy in `src/engine/taxRules2026.ts`; added pure contributions, gross IRPEF, employee deduction, tax-wedge deduction, local-tax, and aggregate salary modules; added explicit public types, strict Italian-number parsing, and display-only EUR formatting.
+- **Precision and reconciliation**: No production formula rounds or truncates intermediate values. The EUR 30,000 reference result retains the approved repeating-ratio precision, and tests verify that annual net plus total withholdings reconciles to RAL within floating-point tolerance.
+- **Security checklist**: Passed all applicable items. Public calculation inputs are type/range checked at runtime, and malformed or ambiguous number text is rejected. No secrets, sensitive logs, external requests, raw HTML, protected routes, authentication/authorization, database queries, API responses, or uploads were introduced. Dependencies remain from the npm registry; server-only checklist items are not applicable.
+- **Verification**: `npm test` passed (9 files, 53 tests); `npm run typecheck` passed; `npm run lint` passed; `npm run build` passed with Vite 8.2.2; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

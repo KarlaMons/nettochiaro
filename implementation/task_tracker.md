@@ -3,10 +3,11 @@
 | ID | Type | Name | Status | Security Checked | Notes |
 |---|---|---|---|---|---|
 | IT-01 | IT | Vite React TypeScript scaffold | completed | yes | Root foundation verified; no tax logic or final UI |
+| IT-02 | IT | Deterministic 2026 salary engine | completed | yes | Pure full-precision engine, strict public validation, parsing/formatting utilities, and 2026 boundary/reference tests |
 
 ## Scope Boundary
 
-Only the approved 2026 Vite foundation is tracked here. Tax rules, product UI, browser journeys, Docker, and deployment require later approved work units.
+The approved Vite foundation and deterministic 2026 fiscal engine are tracked here. Product UI, browser journeys, Docker, and deployment require later approved work units.
 
 ## Status Values
 
