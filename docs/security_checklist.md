@@ -7,6 +7,7 @@
 - [x] All user-entered RAL values are validated for presence, numeric format, positivity, and the approved EUR 25,000–100,000 range before the engine is called.
 - [x] React escapes rendered content; no raw HTML rendering is used.
 - [x] Official external links are fixed engine metadata and use `target="_blank"` with `rel="noreferrer"`.
+- [x] The salary-composition visualization uses SVG geometry attributes and stylesheet classes; regression tests verify the rendered UI has no inline style requirement, preserving `style-src 'self'` without `unsafe-inline`.
 - [x] Dependencies come from the configured npm registry; the high-severity audit reports zero vulnerabilities.
 - [x] Authentication, authorization, admin routes, database queries, API responses, and file-upload checks are not applicable to this client-only, no-persistence journey.
 

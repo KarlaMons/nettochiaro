@@ -4,6 +4,7 @@ import { buildCalculationBreakdown, type CalculationStep } from './engine/buildC
 import { calculateSalary } from './engine/calculateSalary'
 import { TAX_RULES_2026_SOURCE_METADATA } from './engine/taxRules2026'
 import type { MonthlyPayments, SalaryCalculationResult } from './types/salary'
+import { buildPercentageSegments } from './utils/buildPercentageSegments'
 import { formatCurrency } from './utils/formatCurrency'
 import { formatPercentage } from './utils/formatPercentage'
 import { parseItalianNumber } from './utils/parseItalianNumber'
@@ -62,6 +63,7 @@ function Results({ result }: { result: SalaryCalculationResult }) {
     { label: 'Contributi', value: result.employeeContributions, percentage: result.contributionRatePercentage, className: 'contributions' },
     { label: 'Imposte', value: result.totalTaxes, percentage: result.taxRatePercentage, className: 'taxes' },
   ]
+  const segmentGeometry = buildPercentageSegments(segments.map(({ percentage }) => percentage))
 
   return (
     <div className="results-stack">
@@ -81,9 +83,9 @@ function Results({ result }: { result: SalaryCalculationResult }) {
 
       <section className="card composition" aria-labelledby="composition-title">
         <p className="eyebrow">Composizione della RAL</p><h2 id="composition-title">Dove va la retribuzione annua</h2>
-        <div className="composition-bar" role="img" aria-label={segments.map((segment) => `${segment.label}: ${formatCurrency(segment.value)}, ${formatPercentage(segment.percentage)}`).join('; ')}>
-          {segments.map((segment) => <span key={segment.label} className={segment.className} style={{ width: `${segment.percentage}%` }} />)}
-        </div>
+        <svg className="composition-bar" role="img" aria-label={segments.map((segment) => `${segment.label}: ${formatCurrency(segment.value)}, ${formatPercentage(segment.percentage)}`).join('; ')} viewBox="0 0 100 12" preserveAspectRatio="none">
+          {segments.map((segment, index) => <rect key={segment.label} className={`composition-segment ${segment.className}`} x={segmentGeometry[index]?.x} y="0" width={segmentGeometry[index]?.width} height="12" />)}
+        </svg>
         <ul className="legend">{segments.map((segment) => <li key={segment.label}><span className={`legend-dot ${segment.className}`} aria-hidden="true" /><span><strong>{segment.label}</strong><small>{formatCurrency(segment.value)} · {formatPercentage(segment.percentage)}</small></span></li>)}</ul>
       </section>
 

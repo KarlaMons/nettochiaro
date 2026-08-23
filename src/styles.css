@@ -72,11 +72,13 @@ legend { margin-bottom: 0.65rem; }
 .kpi strong { display: block; font-size: clamp(1.35rem, 4vw, 2rem); font-variant-numeric: tabular-nums; letter-spacing: -0.025em; white-space: nowrap; }
 .kpi-primary strong { color: #176343; }
 .monthly-note { margin: 1rem 0 0; color: var(--muted); font-size: 0.85rem; line-height: 1.55; }
-.composition-bar { display: flex; height: 1.15rem; margin-top: 1.5rem; overflow: hidden; border-radius: 0.35rem; background: #eceef2; }
-.composition-bar span { display: block; }
-.net { background: #3b936d; }
-.contributions { background: #c08a45; }
-.taxes { background: #a45f48; }
+.composition-bar { display: block; width: 100%; height: 1.15rem; margin-top: 1.5rem; overflow: hidden; border-radius: 0.35rem; background: #eceef2; }
+.composition-segment.net { fill: #3b936d; }
+.composition-segment.contributions { fill: #c08a45; }
+.composition-segment.taxes { fill: #a45f48; }
+.legend-dot.net { background: #3b936d; }
+.legend-dot.contributions { background: #c08a45; }
+.legend-dot.taxes { background: #a45f48; }
 .legend { display: grid; gap: 0.8rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
 .legend li { display: flex; align-items: start; gap: 0.65rem; }
 .legend-dot { flex: 0 0 auto; width: 0.8rem; height: 0.8rem; margin-top: 0.2rem; border-radius: 0.2rem; }

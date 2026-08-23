@@ -23,7 +23,7 @@ Eseguiti il 23 agosto 2026 nella branch `feature/ral-netto-2026`:
 
 | Comando | Esito osservato |
 |---|---|
-| `npm test` | superato: 13 file, 88 test, 0 fallimenti |
+| `npm test` | superato: 14 file, 91 test, 0 fallimenti |
 | `npm run typecheck` | superato: tutti e tre i progetti TypeScript senza errori |
 | `npm run lint` | superato: ESLint senza errori |
 | `npm run build` | superato: Vite 8.2.2, 28 moduli trasformati, output statico in `dist/` |

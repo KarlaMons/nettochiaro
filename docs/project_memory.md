@@ -18,6 +18,7 @@
 - UJ-01 is an Italian, mobile-first and keyboard-accessible single-page flow. It preserves the RAL as editable text, calculates only after valid submit, and renders annual/monthly KPIs, an accessible salary-composition bar, an adapter-driven formula reconciliation, assumptions, official sources, and the approved warning.
 - Fiscal formulas and source selection for UI disclosure live in the pure `buildCalculationBreakdown` adapter rather than React components.
 - The hardened interaction contract invalidates stale results on either input change, uses one persistent concise status region, gives each formula disclosure a unique accessible name, restores focus when assumptions close, derives bracket prose from centralized arrays, and shares Italian percentage formatting across visible and accessible text.
+- The salary-composition bar is an accessible SVG whose rectangle positions and widths derive from the existing percentage result fields. It emits no inline style attributes, so the deployed `style-src 'self'` CSP remains strict without `unsafe-inline`.
 - Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
 - Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
 - Docker builds from digest-pinned Node.js `24.15.0-alpine3.23`, then copies only `dist/` into digest-pinned stable Nginx `1.30.4-alpine3.24`. Nginx runs entirely as UID/GID 101 on internal port 80 through its sole file capability, with PID/temp writes under `/tmp`. Runtime health, SPA fallback, status-aware cache/security headers, and absence of Node/npm/libcap were verified locally.
@@ -43,6 +44,7 @@
 - `src/types/salary.ts`
 - `src/utils/`
 - `src/utils/formatPercentage.ts`
+- `src/utils/buildPercentageSegments.ts`
 - `README.md`
 - `docs/CALCULATION_SPEC.md`, `docs/VALIDATION.md`, and `docs/security_checklist.md`
 - `Dockerfile`, `nginx.conf`, and `.dockerignore`

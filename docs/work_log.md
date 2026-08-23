@@ -89,3 +89,11 @@
 - Fresh Docker evidence: no-cache image `sha256:29613b559fa6979b71d9b8a293f7e9b8525d07c60acb3696e751d13a427bbfb9`; `Config.User=nginx`; master/workers all UID 101; port 80, health, SPA fallback, exact health body, real asset 200 cache, missing asset 404 no-store, and headers passed. Exact test container was stopped and removed.
 - Capability scan: an ephemeral diagnostic `getcap -r /` returned only `/usr/sbin/nginx cap_net_bind_service=ep`; the normal runtime contains no libcap packages.
 - Verification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### UJ-01 CSP-compatible composition hardening
+
+- Replaced the composition bar's React inline width styles with an accessible SVG. Three rectangles retain the existing Italian summary and visible legend while deriving `x` and `width` geometry from the engine's net, contribution, and tax percentage fields.
+- Added a pure geometry helper that preserves valid values and safely bounds zero, floating-point edge, and overflowing segments to the SVG's 0–100 view box.
+- CSP regression coverage asserts rectangle geometry/classes and verifies that the rendered UI contains no `style` attributes. The production Nginx policy remains `style-src 'self'`; no `unsafe-inline` allowance was added.
+- TDD evidence: focused tests first failed because the geometry helper was absent and the composition element was still an inline-styled `div`; both passed after the SVG implementation.
+- Reverification: `npm test` passed (14 files, 91 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; built output contains no inline `style=` attributes; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

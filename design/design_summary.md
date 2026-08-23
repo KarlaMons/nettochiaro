@@ -11,7 +11,7 @@
 ## Current Module Map
 
 - `src/main.tsx`: browser entry point.
-- `src/App.tsx`: accessible Italian calculator journey with guarded RAL input, 13/14-payment selection, result KPIs, composition, disclosures, assumptions, sources, and disclaimer.
+- `src/App.tsx`: accessible Italian calculator journey with guarded RAL input, 13/14-payment selection, result KPIs, CSP-compatible SVG composition, disclosures, assumptions, sources, and disclaimer.
 - `src/styles.css`: mobile-first sober visual system with responsive cards, tabular figures, visible focus states, and color-independent composition labels.
 - `src/test/setup.ts`: shared browser-test matchers and cleanup.
 - `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`: isolated production-browser, test, and tooling type environments.
@@ -33,6 +33,7 @@
 - Calculations intentionally retain full JavaScript ratio precision instead of the official first-four-decimal employee-deduction convention, without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
 - Each fiscal rule family has frozen traceability metadata for official authority, title/instrument/page where applicable, URL, effective year, and verification date. Employee-deduction metadata separately records that the 730/2026 evidence concerns 2025 income while the unchanged formula is carried into the approved 2026 projection; the 33% IRPEF rate remains independently sourced to Law 199/2025 effective in 2026.
 - UJ-01 exposes the annual calculation through a client-only UI. Results remain hidden until a valid submit and are invalidated on any RAL or payment edit; a persistent concise live region announces successful recalculation. Malformed, non-positive, and out-of-range input never reaches the engine. Authentication, persistence, and backend APIs remain out of scope.
+- Salary composition uses SVG presentation attributes and self-hosted CSS classes rather than React inline styles, remaining compatible with the production `style-src 'self'` policy without `unsafe-inline`.
 
 ## Verification Commands
 
