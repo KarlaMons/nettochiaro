@@ -21,6 +21,9 @@ describe('parseItalianNumber', () => {
     '30.00',
     '3.00.000',
     '30.000.00',
+    '1.234 567',
+    '1 234.567',
+    '12.345\u00a0678,90',
     'NaN',
     'Infinity',
   ])('rejects %j', (input) => {

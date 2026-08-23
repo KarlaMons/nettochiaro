@@ -16,18 +16,19 @@
 - `src/test/setup.ts`: shared browser-test matchers and cleanup.
 - `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`: isolated production-browser, test, and tooling type environments.
 - `src/types/salary.ts`: explicit public input/result types for salary calculations.
-- `src/engine/taxRules2026.ts`: immutable 2026 constants, progressive brackets, supported ranges, scenario, precision policy, and source provenance.
+- `src/engine/taxRules2026.ts`: immutable 2026 constants, progressive brackets, supported ranges, scenario, precision policy, and rule-specific official-source provenance.
 - `src/engine/`: pure modules for employee contributions, gross IRPEF, employee deduction, tax-wedge deduction, Lombardia regional tax, Milano municipal tax, and the aggregate salary calculation.
 - `src/utils/`: strict Italian-number parsing and display-only EUR currency formatting.
 
 ## IT-02 Fiscal Contract
 
-- Supported scenario: standard private non-manager permanent full-time employee for the full 2026 year, resident in Milano/Lombardia, without dependents, other income, deductions, or additional relief.
+- Supported scenario: standard private non-manager permanent full-time employee for the full 2026 year, resident in Milano/Lombardia. Statutory employee and tax-wedge deductions are included; personal/additional relief, dependents, other deductions, and trattamento integrativo are excluded.
 - Public calculation input: finite gross annual salary from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments.
 - Contributions: 9.19% of RAL plus 1% of the portion above EUR 56,224.
 - National tax: progressive IRPEF of 23% through EUR 28,000, 33% through EUR 50,000, and 43% above; employee and tax-wedge deductions use the approved IT-02 formulas.
 - Local tax: progressive Lombardia rates of 1.23%, 1.58%, 1.72%, and 1.73%; Milano applies 0.8% to the entire taxable income only above its EUR 23,000 exemption threshold.
-- Calculations retain full JavaScript number precision without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
+- Calculations intentionally retain full JavaScript ratio precision instead of the official first-four-decimal employee-deduction convention, without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
+- Each fiscal rule family has frozen traceability metadata for official authority, title/instrument/page where applicable, URL, effective year, and verification date.
 - The final product UI, Docker, deployment, authentication, persistence, and backend APIs remain out of scope.
 
 ## Verification Commands

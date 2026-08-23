@@ -3,7 +3,7 @@
 | ID | Type | Name | Status | Security Checked | Notes |
 |---|---|---|---|---|---|
 | IT-01 | IT | Vite React TypeScript scaffold | completed | yes | Root foundation verified; no tax logic or final UI |
-| IT-02 | IT | Deterministic 2026 salary engine | completed | yes | Pure full-precision engine, strict public validation, parsing/formatting utilities, and complete 2026 boundary/reference coverage (65 tests) |
+| IT-02 | IT | Deterministic 2026 salary engine | completed | yes | Pure full-precision engine, official rule-specific provenance, strict parsing/validation, and complete 2026 boundary/reference coverage (71 tests) |
 
 ## Scope Boundary
 

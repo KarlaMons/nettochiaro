@@ -36,3 +36,12 @@
 - Strengthened the 13-versus-14 payment invariant to compare every annual calculation field for exact equality while proving that only the payment count and monthly average differ.
 - TDD evidence: the expanded suite initially failed only because `calculateNetIrpef` did not exist; after extraction, all 10 test files and 65 tests passed.
 - Reverification: `npm test` passed (10 files, 65 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### IT-02 fiscal-provenance review
+
+- Replaced generic provenance with six frozen rule-specific records covering employee contributions, IRPEF, employee deduction, tax-wedge deduction, Lombardia regional tax, and Milano municipal tax. Each record identifies its official authority, title/instrument/page where applicable, URL, 2026 effective year, and `2026-08-23` verification date.
+- Clarified that the supported scenario includes the statutory employee and tax-wedge deductions while excluding personal/additional relief, dependents, other deductions, and trattamento integrativo.
+- Documented the deliberate prototype precision policy: employee-deduction ratios retain full precision instead of applying the official first-four-decimal convention.
+- Hardened Italian-number parsing so a grouped number may use dots, normal spaces, or non-breaking spaces, but cannot mix separator styles.
+- TDD evidence: all six new assertions initially failed against generic metadata and permissive mixed-separator parsing; after implementation, all 11 test files and 71 tests passed.
+- Reverification: `npm test` passed (11 files, 71 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

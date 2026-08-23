@@ -1,4 +1,5 @@
-const ITALIAN_NUMBER_PATTERN = /^(?:\d+|\d{1,3}(?:[.\u00a0 ]\d{3})+)(?:,\d+)?$/
+const ITALIAN_NUMBER_PATTERN =
+  /^(?:\d+|\d{1,3}([.\u00a0 ])\d{3}(?:\1\d{3})*)(?:,\d+)?$/
 
 export function parseItalianNumber(input: string): number {
   if (typeof input !== 'string') {

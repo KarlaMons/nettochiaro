@@ -13,7 +13,8 @@
 - The app is client-only at this stage, with no backend, persistence, authentication, Docker, or final product UI.
 - Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
 - The pure 2026 engine supports RAL from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments for the approved standard Milano/Lombardia employee scenario.
-- Fiscal constants and source provenance are centralized in `src/engine/taxRules2026.ts`; internal monetary values retain full precision and are formatted to two decimals only for display.
+- Fiscal constants and frozen rule-specific official-source provenance are centralized in `src/engine/taxRules2026.ts`; employee-deduction ratios intentionally retain full precision instead of the official first-four-decimal convention, and monetary values are formatted to two decimals only for display.
+- The supported scenario includes statutory employee and tax-wedge deductions but excludes personal/additional relief, dependents, other deductions, and trattamento integrativo. Italian-number grouping separators must be internally consistent.
 - Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
 - Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
 - `CLAUDE.md` remains the engineering governance source. `AGENTS.md` and `README.md` are intentionally unchanged in IT-01.
