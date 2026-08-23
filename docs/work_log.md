@@ -80,3 +80,12 @@
 - Clarified that Modello 730/2026 is filed in 2026 for 2025 income and is used only as official evidence of the employee-deduction formula and first-four-decimal ratio convention. The unchanged formula is carried into the approved 2026 projection, whereas the new 33% IRPEF rate is independently sourced to Law 199/2025 effective in 2026.
 - Added type-safe `referenceTaxPeriod` and applicability-note provenance for the employee-deduction source, plus regression assertions. Fiscal constants and formulas were not changed.
 - Verification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### IT-03 reproducible non-root Nginx hardening
+
+- Pinned explicit Node/Nginx Alpine variants to Docker-verified multi-architecture manifest digests. Base updates are now intentional tag/digest/package changes followed by a no-cache rebuild; no automatic image freshness is claimed.
+- Runs Nginx fully as `nginx` UID/GID 101 on internal port 80. The build temporarily installs pinned libcap tooling, grants only `cap_net_bind_service=ep` to `/usr/sbin/nginx`, verifies it, then removes libcap. PID and all client/proxy/protocol temp paths are writable by UID 101 under `/tmp`.
+- Made caching status-aware: successful hashed assets receive one-year immutable caching, while HTML and missing-asset 404 responses receive `no-store`. Security headers are inherited on both success and error responses.
+- Fresh Docker evidence: no-cache image `sha256:29613b559fa6979b71d9b8a293f7e9b8525d07c60acb3696e751d13a427bbfb9`; `Config.User=nginx`; master/workers all UID 101; port 80, health, SPA fallback, exact health body, real asset 200 cache, missing asset 404 no-store, and headers passed. Exact test container was stopped and removed.
+- Capability scan: an ephemeral diagnostic `getcap -r /` returned only `/usr/sbin/nginx cap_net_bind_service=ep`; the normal runtime contains no libcap packages.
+- Verification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

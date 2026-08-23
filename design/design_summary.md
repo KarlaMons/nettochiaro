@@ -6,7 +6,7 @@
 - Runtime: client-only React application built with Vite and strict TypeScript; Node.js 24.15.x is the pinned development line.
 - Testing: Vitest, jsdom, and Testing Library.
 - Persistence, authentication, backend APIs, and runtime credentials: none in the current scope.
-- Delivery: multi-stage Docker build with Node.js 24.15.0 used only at build time and pinned stable Nginx Alpine serving the static SPA on internal port 80; no external deployment is performed by the repository.
+- Delivery: multi-stage Docker build with explicit Alpine variants and verified multi-architecture manifest digests. Node.js 24.15.0 is build-only; stable Nginx Alpine runs fully as UID/GID 101 on internal port 80 using only a file-level `cap_net_bind_service` grant. No external deployment is performed by the repository.
 
 ## Current Module Map
 
@@ -20,7 +20,7 @@
 - `src/engine/`: pure modules for employee contributions, gross IRPEF, employee deduction, tax-wedge deduction, Lombardia regional tax, Milano municipal tax, and the aggregate salary calculation.
 - `src/engine/buildCalculationBreakdown.ts`: pure presentation adapter that derives ordered formula/source descriptors from engine results and centralized 2026 rules; React contains no fiscal formulas.
 - `src/utils/`: strict Italian-number parsing and display-only EUR currency formatting.
-- `Dockerfile`, `nginx.conf`, `.dockerignore`: reproducible static build, hardened Nginx SPA fallback, `/healthz`, and delivery build-context exclusions.
+- `Dockerfile`, `nginx.conf`, `.dockerignore`: digest-pinned static build, non-root Nginx with `/tmp` runtime paths, hardened SPA fallback, status-aware cache policy, `/healthz`, and delivery build-context exclusions.
 - `docs/CALCULATION_SPEC.md` and `docs/VALIDATION.md`: reviewer-facing fiscal contract, worked example, coverage, evidence, and residual differences.
 
 ## IT-02 Fiscal Contract
@@ -53,4 +53,4 @@
 - React escapes rendered text by default; no raw HTML rendering is used.
 - IT-02 adds no network, persistence, credential, protected-route, upload, or raw-HTML surface. The calculation boundary rejects non-number inputs, non-finite RAL values, out-of-range RAL values, and unsupported payment counts; the parser rejects malformed or ambiguous numeric text.
 - UJ-01 keeps all processing local, validates and associates form errors before calculation, uses React's escaped text rendering, and opens official links with `rel="noreferrer"`. No secrets, storage, API calls, authentication, database, uploads, or raw HTML were introduced.
-- IT-03 adds a static Nginx runtime with no Node executable, exact `/healthz`, hidden server version, restrictive compatible CSP, clickjacking/MIME/referrer/permissions headers, no-cache HTML, and immutable caching for hashed Vite assets. EasyPanel steps are documentation only; no credentials or external actions are included.
+- IT-03 adds a static Nginx runtime with no Node executable, exact `/healthz`, hidden server version, restrictive compatible CSP, clickjacking/MIME/referrer/permissions headers, no-store HTML/errors, and immutable caching only for successful hashed Vite assets. Base-image updates require intentional tag/digest review and complete rebuild verification; digest pins do not provide automatic freshness. EasyPanel steps are documentation only; its documented App UI does not currently establish read-only-root/tmpfs support, so that remains unverified future hardening.

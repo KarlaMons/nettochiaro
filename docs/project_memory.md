@@ -20,7 +20,8 @@
 - The hardened interaction contract invalidates stale results on either input change, uses one persistent concise status region, gives each formula disclosure a unique accessible name, restores focus when assumptions close, derives bracket prose from centralized arrays, and shares Italian percentage formatting across visible and accessible text.
 - Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
 - Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
-- Docker builds with Node.js 24.15.0 Alpine, then copies only `dist/` into pinned stable Nginx 1.30.4 Alpine. Runtime health, SPA fallback, cache/security headers, and absence of Node/npm were verified locally.
+- Docker builds from digest-pinned Node.js `24.15.0-alpine3.23`, then copies only `dist/` into digest-pinned stable Nginx `1.30.4-alpine3.24`. Nginx runs entirely as UID/GID 101 on internal port 80 through its sole file capability, with PID/temp writes under `/tmp`. Runtime health, SPA fallback, status-aware cache/security headers, and absence of Node/npm/libcap were verified locally.
+- Base-image refreshes are manual and reviewed: update explicit tag, multi-architecture manifest digest, and pinned Alpine package versions together, then rebuild without cache and repeat all checks. EasyPanel read-only-root/`tmpfs` remains future hardening because the current documented App UI does not expose those settings.
 - `README.md`, `docs/CALCULATION_SPEC.md`, and `docs/VALIDATION.md` give the reviewer complete Italian product, formula, source, limitation, verification, and EasyPanel context.
 - `CLAUDE.md` remains the engineering governance source; `AGENTS.md` now reflects the current Vite/engine/Docker repository.
 

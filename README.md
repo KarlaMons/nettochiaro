@@ -46,7 +46,7 @@ Il prototipo assume il 9,19% come aliquota ordinaria annua costante e annualizza
 
 ## Architettura
 
-È una SPA React 19 + Vite 8 in TypeScript rigoroso, interamente client-side: nessun backend, database, account, segreto, API fiscale o calcolo AI. Le formule pure e le fonti sono esclusivamente in `src/engine/`; `src/App.tsx` rende il risultato e `src/utils/` gestisce parsing e formato. Vitest e Testing Library coprono engine e interfaccia. La build statica è servita da Nginx in un’immagine Docker multi-stage priva di runtime Node.
+È una SPA React 19 + Vite 8 in TypeScript rigoroso, interamente client-side: nessun backend, database, account, segreto, API fiscale o calcolo AI. Le formule pure e le fonti sono esclusivamente in `src/engine/`; `src/App.tsx` rende il risultato e `src/utils/` gestisce parsing e formato. Vitest e Testing Library coprono engine e interfaccia. La build statica è servita da Nginx in un’immagine Docker multi-stage priva di runtime Node. Il processo Nginx gira come utente non-root `nginx` (UID/GID 101) sulla porta interna 80; soltanto il binario Nginx riceve `cap_net_bind_service=ep`, mentre PID e file temporanei sono confinati in `/tmp`.
 
 Requisiti locali: Node.js 24.15.x (il progetto accetta anche Node 26+), npm 11+, Docker solo per la verifica del container.
 
@@ -67,6 +67,8 @@ docker run --rm -p 8080:80 ral-netto-calculator
 curl http://localhost:8080/healthz
 ```
 
+Le basi sono bloccate sia a variante Alpine esplicita sia al digest dell’indice multi-architettura: Node `24.15.0-alpine3.23@sha256:d1b3…dfc94f` e Nginx `1.30.4-alpine3.24@sha256:97d4…e5b46`. Questo rende la selezione ripetibile sulle architetture pubblicate, ma **non aggiorna automaticamente** immagini o patch di sicurezza. L’aggiornamento è intenzionale: scegliere una release supportata, ricavare il nuovo digest con `docker buildx imagetools inspect <immagine:tag>`, aggiornare insieme tag completo, digest e versioni Alpine/libcap, quindi eseguire build senza cache, audit, test e smoke test non-root prima del commit.
+
 ## Deploy su EasyPanel
 
 1. Creare un **App Service** e collegare il repository GitHub.
@@ -78,6 +80,8 @@ curl http://localhost:8080/healthz
 7. Verificare `https://<dominio>/healthz` (HTTP 200, testo `ok`), la home e un percorso profondo per il fallback SPA.
 
 Questi sono passaggi operativi documentati: il repository non esegue alcuna azione esterna né contiene una configurazione EasyPanel proprietaria.
+
+La [documentazione corrente dell’App Service EasyPanel](https://easypanel.io/docs/services/app) espone controllo di capability e sysctl, ma non documenta nel pannello opzioni per root filesystem read-only e mount `tmpfs`. Perciò queste opzioni **non sono dichiarate configurate o verificate**. Restano un hardening futuro: se una versione successiva dell’interfaccia o un servizio Compose le rende disponibili, provare filesystem root read-only con un `tmpfs` scrivibile su `/tmp` e ripetere health/SPA test prima dell’adozione.
 
 ## Possibili evoluzioni
 

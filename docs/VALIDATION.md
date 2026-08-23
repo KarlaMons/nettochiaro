@@ -29,19 +29,23 @@ Eseguiti il 23 agosto 2026 nella branch `feature/ral-netto-2026`:
 | `npm run build` | superato: Vite 8.2.2, 28 moduli trasformati, output statico in `dist/` |
 | `npm audit --audit-level=high` | superato: 0 vulnerabilità rilevate |
 | `git diff --check` | superato: nessun errore di whitespace |
-| `docker build -t ral-netto-calculator .` | superato; build multi-stage con `npm ci` e `npm run build`, immagine finale `sha256:68b122db66961852cf2566a0510cf5c76fe17c274ee5eafecc80136f3d907421` |
+| `docker build --no-cache -t ral-netto-calculator .` | superato; build multi-stage con `npm ci` e `npm run build`, immagine finale `sha256:29613b559fa6979b71d9b8a293f7e9b8525d07c60acb3696e751d13a427bbfb9` |
 
-Ispezione runtime: `command -v node`, `command -v npm` e l’elenco pacchetti Alpine non hanno trovato Node/npm nell’immagine finale. `docker image inspect` ha confermato porta esposta `80/tcp` e health check HTTP su `/healthz`.
+I digest degli indici multi-architettura sono stati ricavati e verificati con `docker buildx imagetools inspect`: Node `24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f`; Nginx `1.30.4-alpine3.24@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46`. Il log di build ha confermato `cap_net_bind_service=ep`; una scansione diagnostica effimera con `getcap -r /` ha restituito soltanto `/usr/sbin/nginx cap_net_bind_service=ep`. Gli strumenti libcap sono poi assenti dall’immagine normale.
 
-Smoke test finale con il solo container `ral-netto-calculator-it03-final` su porta host libera `18080`; `nginx -t` ha confermato sintassi e configurazione valide:
+Ispezione runtime: `Config.User` è `nginx`; `id` restituisce UID/GID 101. `docker top` mostra master e tutti i worker Nginx come UID 101. PID e cinque directory temporanee sono sotto `/tmp`, scrivibili e di proprietà 101:101. `command -v node`, `command -v npm` e l’elenco pacchetti Alpine non hanno trovato Node/npm/libcap nell’immagine finale. `docker image inspect` ha confermato porta esposta `80/tcp` e health check HTTP su `/healthz`.
 
-- `/` → HTTP 200, HTML con `Cache-Control: no-cache, no-store, must-revalidate`;
+Smoke test finale con il solo container `ral-netto-calculator-it03-hardened` su porta host libera `18080`; `nginx -t`, eseguito come utente predefinito non-root, ha confermato sintassi e configurazione valide:
+
+- `/` → HTTP 200, HTML con `Cache-Control: no-store`;
 - `/percorso/profondo` → HTTP 200 e contenuto identico alla home (fallback SPA);
 - `/healthz` → HTTP 200, `Content-Type: text/plain`, corpo esatto `ok\n`, stato Docker `healthy`;
-- asset JavaScript con hash → HTTP 200 e `Cache-Control: public, max-age=31536000, immutable`;
-- asset inesistente → HTTP 404;
+- asset JavaScript reale con hash → HTTP 200 e `Cache-Control: public, max-age=31536000, immutable`;
+- asset inesistente → HTTP 404 con `Cache-Control: no-store`, senza `immutable`;
 - home, fallback, health e asset includono CSP, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` e `Permissions-Policy`; `Server` espone soltanto `nginx`, senza versione;
 - il container specifico è stato fermato e rimosso dopo la prova; non è rimasto alcun container con quel nome.
+
+Il root filesystem read-only con `tmpfs` su `/tmp` non è dichiarato verificato: la documentazione corrente dell’App Service EasyPanel non espone questi controlli. È una misura futura subordinata al supporto della piattaforma e alla ripetizione degli smoke test.
 
 ## Confronto con fonti esterne
 
