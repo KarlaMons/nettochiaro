@@ -5,10 +5,11 @@
 | IT-01 | IT | Vite React TypeScript scaffold | completed | yes | Root foundation verified; no tax logic or final UI |
 | IT-02 | IT | Deterministic 2026 salary engine | completed | yes | Pure full-precision engine, official rule-specific provenance, strict parsing/validation, and complete 2026 boundary/reference coverage (71 tests) |
 | UJ-01 | UJ | Transparent RAL-to-net calculator | completed | yes | Accessible responsive Italian UI, guarded result lifecycle, dedicated announcements, formula/assumption disclosures, derived rule copy, and official sources (88 tests total) |
+| IT-03 | IT | Documented Docker delivery | completed | yes | Italian reviewer/spec/validation docs; pinned multi-stage Node-to-Nginx image; healthy SPA, headers, cache policy, and no-Node runtime verified locally; no external deploy |
 
 ## Scope Boundary
 
-The approved Vite foundation, deterministic 2026 fiscal engine, and UJ-01 product UI are tracked here. Docker and deployment remain deferred.
+The approved Vite foundation, deterministic 2026 fiscal engine, UJ-01 product UI, and IT-03 documented Docker delivery are tracked here. IT-03 prepares but does not execute an external deployment.
 
 ## Status Values
 

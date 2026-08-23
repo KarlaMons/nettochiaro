@@ -2,28 +2,33 @@
 
 ## Project Structure & Module Organization
 
-This repository is currently a planning-first Next.js scaffold. Product requirements live in `planning/`; architecture, fiscal rules, API, and UI decisions belong in `design/`. Track delivery in `implementation/task_tracker.md` and `implementation/user_journeys.md`, and record progress under `docs/`. Runtime code will use root-level `app/`, `components/`, and `lib/tax/`; unit tests belong in `tests/` and browser flows in `e2e/`. Deployment assets are grouped under `deployment/`, with local orchestration in `docker-compose.yml`.
+The product is a client-only Vite/React calculator. Runtime code lives in `src/`: fiscal constants and formulas are confined to `src/engine/`, public types to `src/types/`, formatting/parsing to `src/utils/`, and rendering to `src/App.tsx`. Co-locate Vitest files as `*.test.ts(x)`. Product and fiscal decisions live in `design/`; execution state is tracked in `implementation/task_tracker.md`, `docs/work_log.md`, and `docs/project_memory.md`. Delivery uses root `Dockerfile`, `nginx.conf`, and `.dockerignore`.
 
-Before implementing, read `docs/project_memory.md`, `implementation/task_tracker.md`, and `design/design_summary.md`. Do not begin application code until planning is complete and approved.
+Before changes, read `CLAUDE.md`, `docs/project_memory.md`, `implementation/task_tracker.md`, and `design/design_summary.md`. Planning must be approved before implementation.
 
 ## Build, Test, and Development Commands
 
-Executable scripts are introduced in IT-01 and documented in `design/design_summary.md`. Use:
+- `npm ci` — install the lockfile exactly.
+- `npm run dev` — start Vite locally.
+- `npm test` — run unit, integration, and component tests.
+- `npm run typecheck`, `npm run lint`, `npm run build` — verify types, style, and production output.
+- `npm audit --audit-level=high` — check high-severity dependency findings.
+- `docker build -t ral-netto-calculator .` and `docker run --rm -p 8080:80 ral-netto-calculator` — verify delivery configuration.
 
-- `docker compose up --build` — build and start the local stack.
-- `docker compose down` — stop local services.
-- `npm test`, `npm run test:e2e`, `npm run lint`, `npm run typecheck`, and `npm run build` — verify calculations, user flow, style, types, and production output.
-
-Do not claim a change works without running the relevant verification command and recording the result in `docs/work_log.md`.
+Run test, lint, typecheck, and build before completion. When Docker configuration changes, also build and smoke-test the image and `/healthz`; record actual results in `docs/work_log.md`.
 
 ## Coding Style & Naming Conventions
 
-Use strict TypeScript, ESLint, and the formatter configured during IT-01. Keep fiscal rules in pure modules; UI components must not duplicate formulas. Use `camelCase` for values/functions, `PascalCase` for components/types, and `UPPER_SNAKE_CASE` for versioned constants. Name work units `IT-XX` and `UJ-XX`. Do not hardcode secrets or silently alter 2025 thresholds.
+Use strict TypeScript, configured ESLint, `camelCase` values/functions, `PascalCase` components/types, and `UPPER_SNAKE_CASE` constants. UI code must never duplicate fiscal formulas: formulas and source metadata belong only in `src/engine/`. Do not add unsupported fiscal cases, silently alter thresholds, or introduce AI/API-based calculation.
 
 ## Testing Guidelines
 
-Use Vitest for pure formulas/components and Playwright for browser journeys. Test every statutory boundary, cent rounding, reconciliation, low-income credits, invalid input, keyboard flow, and mobile layout. Keep the EUR 30,000 reference case synchronized with `design/calculation_rules.md`. A journey is complete only after its documented commands pass.
+Use Vitest and Testing Library. Any fiscal-rule change requires tests for exact boundaries, full-precision reconciliation, the 30.000-euro reference, invalid input, and 13/14 invariance. Keep contributions distinct from taxes and describe monthly values as annual averages, not payslips.
 
 ## Commit & Pull Request Guidelines
 
-Use imperative, work-unit-prefixed commits, for example `IT-02: implement 2025 tax engine` or `UJ-03: explain calculation rules`. Pull requests should identify the work unit, summarize fiscal and security impact, list commands run, cite any changed official source, and include desktop/mobile screenshots for UI changes. Update the task tracker and work log before review.
+Use imperative work-unit commits, for example `IT-03: prepare documented Docker delivery` or `UJ-02: add regional selection`. Pull requests must name the work unit, fiscal/security impact, official sources changed, commands run, and UI screenshots when relevant. Update tracker, work log, and project memory before review.
+
+## Fiscal Rules & Deployment Safety
+
+Never hardcode secrets or deploy/push without authorization. Preserve the static, no-credentials architecture unless a newly approved plan changes it.

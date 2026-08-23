@@ -3,14 +3,14 @@
 ## Current State
 
 - **Project**: JetHR 2026 RAL-to-net calculator.
-- **Phase**: Execution; the foundation, deterministic 2026 salary engine, and complete UJ-01 calculator interface are in place.
-- **Last Completed Work Unit**: UJ-01 — transparent RAL-to-net calculator.
-- **Next Step**: Await the next approved work unit; Docker and deployment remain deferred.
+- **Phase**: Delivery-ready locally; the foundation, deterministic 2026 engine, UJ-01 interface, and documented Docker delivery are complete.
+- **Last Completed Work Unit**: IT-03 — documented Docker delivery.
+- **Next Step**: User-managed review and optional external EasyPanel deployment; no deployment or push has been performed.
 
 ## Scope and Decisions
 
 - The obsolete 2025 planning-first Next.js scaffold has been superseded.
-- The app is client-only, with no backend, persistence, authentication, Docker, or external runtime requests.
+- The app is client-only, with no backend, persistence, authentication, or external runtime requests; a multi-stage Docker image serves only static assets through Nginx.
 - Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
 - The pure 2026 engine supports RAL from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments for the approved standard Milano/Lombardia employee scenario.
 - Fiscal constants and frozen rule-specific official-source provenance are centralized in `src/engine/taxRules2026.ts`; employee-deduction ratios intentionally retain full precision instead of the official first-four-decimal convention, and monetary values are formatted to two decimals only for display.
@@ -20,12 +20,14 @@
 - The hardened interaction contract invalidates stale results on either input change, uses one persistent concise status region, gives each formula disclosure a unique accessible name, restores focus when assumptions close, derives bracket prose from centralized arrays, and shares Italian percentage formatting across visible and accessible text.
 - Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
 - Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
-- `CLAUDE.md` remains the engineering governance source. `AGENTS.md` and `README.md` are intentionally unchanged in IT-01.
+- Docker builds with Node.js 24.15.0 Alpine, then copies only `dist/` into pinned stable Nginx 1.30.4 Alpine. Runtime health, SPA fallback, cache/security headers, and absence of Node/npm were verified locally.
+- `README.md`, `docs/CALCULATION_SPEC.md`, and `docs/VALIDATION.md` give the reviewer complete Italian product, formula, source, limitation, verification, and EasyPanel context.
+- `CLAUDE.md` remains the engineering governance source; `AGENTS.md` now reflects the current Vite/engine/Docker repository.
 
 ## Blockers and Pending Decisions
 
-- None for UJ-01.
-- Docker, deployment, and subsequent implementation units remain subject to explicit approval.
+- No implementation blockers.
+- The public demo URL remains `Da aggiungere dopo il deployment`; external deployment is intentionally not performed in IT-03.
 
 ## Key Files
 
@@ -40,3 +42,6 @@
 - `src/types/salary.ts`
 - `src/utils/`
 - `src/utils/formatPercentage.ts`
+- `README.md`
+- `docs/CALCULATION_SPEC.md`, `docs/VALIDATION.md`, and `docs/security_checklist.md`
+- `Dockerfile`, `nginx.conf`, and `.dockerignore`

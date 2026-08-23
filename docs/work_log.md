@@ -65,3 +65,12 @@
 - Derived both national and regional bracket descriptions, including their final open bounds, from centralized rule arrays. Added one shared Italian percentage formatter for visible legends and the composition bar’s accessible summary.
 - TDD evidence: the new regressions initially failed for the missing formatter, stale results, absent persistent status, duplicate disclosure names, incomplete bracket prose, and focus behavior; all passed after implementation.
 - Reverification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+## 2026-08-23 — IT-03: Documented Docker Delivery
+
+- **Status**: Completed locally; no push, public deployment, domain, certificate, or external service mutation was performed.
+- **Scope**: Replaced obsolete repository guidance with an Italian reviewer README, complete calculation specification, truthful validation report, current contributor guidance, and EasyPanel runbook. Fiscal formulas and UI were not changed.
+- **Delivery**: Added a multi-stage image using Node.js 24.15.0 Alpine for `npm ci`/build and stable Nginx 1.30.4 Alpine as the static-only runtime. Nginx listens on port 80, provides exact `/healthz`, SPA fallback, gzip, no-cache HTML, immutable hashed assets, hidden version, and restrictive compatible security headers.
+- **Docker evidence**: `docker build -t ral-netto-calculator .` passed and produced final image `sha256:68b122db66961852cf2566a0510cf5c76fe17c274ee5eafecc80136f3d907421`. Runtime inspection found no Node/npm and `nginx -t` passed. Container `ral-netto-calculator-it03-final` on free host port 18080 became healthy; root, deep-link fallback, health endpoint, security/cache headers, and unknown-asset 404 passed curl checks. That exact container was then stopped and removed.
+- **Security**: Final applicable checklist passed. There are no credentials or dynamic services; the runtime contains only Nginx/static files. CSP, MIME, frame, referrer, permissions, caching, health response, and lack of server-version disclosure were verified. Server-side auth/database/upload items remain not applicable.
+- **Verification**: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed. Full command-level evidence and residual differences are in `docs/VALIDATION.md`.
