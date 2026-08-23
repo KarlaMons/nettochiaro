@@ -28,3 +28,11 @@
 - **Precision and reconciliation**: No production formula rounds or truncates intermediate values. The EUR 30,000 reference result retains the approved repeating-ratio precision, and tests verify that annual net plus total withholdings reconciles to RAL within floating-point tolerance.
 - **Security checklist**: Passed all applicable items. Public calculation inputs are type/range checked at runtime, and malformed or ambiguous number text is rejected. No secrets, sensitive logs, external requests, raw HTML, protected routes, authentication/authorization, database queries, API responses, or uploads were introduced. Dependencies remain from the npm registry; server-only checklist items are not applicable.
 - **Verification**: `npm test` passed (9 files, 53 tests); `npm run typecheck` passed; `npm run lint` passed; `npm run build` passed with Vite 8.2.2; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### IT-02 boundary-coverage review
+
+- Added direct coverage for inclusive RAL limits and runtime non-number inputs; employee-deduction strict boundaries at EUR 15,001, EUR 25,000, and EUR 25,001; and tax-wedge strict boundaries at EUR 20,000, EUR 20,001, and EUR 32,001.
+- Extracted the existing net-IRPEF zero cap into the pure `calculateNetIrpef` helper and tested both its subtraction and capped branches without changing the formula.
+- Strengthened the 13-versus-14 payment invariant to compare every annual calculation field for exact equality while proving that only the payment count and monthly average differ.
+- TDD evidence: the expanded suite initially failed only because `calculateNetIrpef` did not exist; after extraction, all 10 test files and 65 tests passed.
+- Reverification: `npm test` passed (10 files, 65 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

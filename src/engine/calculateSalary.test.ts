@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import type { SalaryCalculationInput } from '../types/salary'
 import { calculateSalary } from './calculateSalary'
 
 describe('calculateSalary', () => {
@@ -46,16 +47,39 @@ describe('calculateSalary', () => {
       monthlyPayments: 14,
     })
 
-    expect(fourteen.annualNetSalary).toBe(thirteen.annualNetSalary)
-    expect(fourteen.totalWithholdings).toBe(thirteen.totalWithholdings)
-    expect(fourteen.averageMonthlyNetSalary).toBeCloseTo(
-      fourteen.annualNetSalary / 14,
+    const {
+      monthlyPayments: thirteenPayments,
+      averageMonthlyNetSalary: thirteenMonthlyNet,
+      ...thirteenAnnualResults
+    } = thirteen
+    const {
+      monthlyPayments: fourteenPayments,
+      averageMonthlyNetSalary: fourteenMonthlyNet,
+      ...fourteenAnnualResults
+    } = fourteen
+
+    expect(thirteenPayments).toBe(13)
+    expect(fourteenPayments).toBe(14)
+    expect(fourteenAnnualResults).toEqual(thirteenAnnualResults)
+    expect(fourteenAnnualResults.annualNetSalary).toBe(
+      thirteenAnnualResults.annualNetSalary,
+    )
+    expect(fourteenMonthlyNet).toBeCloseTo(
+      fourteenAnnualResults.annualNetSalary / 14,
       12,
     )
-    expect(fourteen.averageMonthlyNetSalary).not.toBe(
-      thirteen.averageMonthlyNetSalary,
-    )
+    expect(fourteenMonthlyNet).not.toBe(thirteenMonthlyNet)
   })
+
+  it.each([25_000, 100_000])(
+    'accepts inclusive supported RAL boundary %s',
+    (grossAnnualSalary) => {
+      expect(
+        calculateSalary({ grossAnnualSalary, monthlyPayments: 13 })
+          .grossAnnualSalary,
+      ).toBe(grossAnnualSalary)
+    },
+  )
 
   it('reports percentages against gross annual salary and reconciles', () => {
     const result = calculateSalary({
@@ -98,5 +122,23 @@ describe('calculateSalary', () => {
         monthlyPayments: payments as 13,
       }),
     ).toThrow(RangeError)
+  })
+
+  it('rejects a runtime non-number gross annual salary', () => {
+    const input = {
+      grossAnnualSalary: '30.000',
+      monthlyPayments: 13,
+    } as unknown as SalaryCalculationInput
+
+    expect(() => calculateSalary(input)).toThrow(TypeError)
+  })
+
+  it('rejects a runtime non-number monthly payment count', () => {
+    const input = {
+      grossAnnualSalary: 30_000,
+      monthlyPayments: '13',
+    } as unknown as SalaryCalculationInput
+
+    expect(() => calculateSalary(input)).toThrow(TypeError)
   })
 })

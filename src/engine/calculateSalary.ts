@@ -5,7 +5,7 @@ import type {
 } from '../types/salary'
 import { calculateEmployeeContributions } from './contributions'
 import { calculateEmployeeDeduction } from './employeeDeduction'
-import { calculateGrossIrpef } from './irpef'
+import { calculateGrossIrpef, calculateNetIrpef } from './irpef'
 import {
   calculateLombardyRegionalTax,
   calculateMilanMunicipalTax,
@@ -61,9 +61,10 @@ export function calculateSalary(
   const grossIrpef = calculateGrossIrpef(taxableIncome)
   const employeeDeduction = calculateEmployeeDeduction(taxableIncome)
   const taxWedgeDeduction = calculateTaxWedgeDeduction(taxableIncome)
-  const netIrpef = Math.max(
-    0,
-    grossIrpef - employeeDeduction - taxWedgeDeduction,
+  const netIrpef = calculateNetIrpef(
+    grossIrpef,
+    employeeDeduction,
+    taxWedgeDeduction,
   )
   const regionalTax = calculateLombardyRegionalTax(taxableIncome)
   const municipalTax = calculateMilanMunicipalTax(taxableIncome)
