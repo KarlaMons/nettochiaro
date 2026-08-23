@@ -17,6 +17,7 @@
 - The supported scenario includes statutory employee and tax-wedge deductions but excludes personal/additional relief, dependents, other deductions, and trattamento integrativo. Italian-number grouping separators must be internally consistent.
 - UJ-01 is an Italian, mobile-first and keyboard-accessible single-page flow. It preserves the RAL as editable text, calculates only after valid submit, and renders annual/monthly KPIs, an accessible salary-composition bar, an adapter-driven formula reconciliation, assumptions, official sources, and the approved warning.
 - Fiscal formulas and source selection for UI disclosure live in the pure `buildCalculationBreakdown` adapter rather than React components.
+- The hardened interaction contract invalidates stale results on either input change, uses one persistent concise status region, gives each formula disclosure a unique accessible name, restores focus when assumptions close, derives bracket prose from centralized arrays, and shares Italian percentage formatting across visible and accessible text.
 - Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
 - Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
 - `CLAUDE.md` remains the engineering governance source. `AGENTS.md` and `README.md` are intentionally unchanged in IT-01.
@@ -38,3 +39,4 @@
 - `src/App.tsx`, `src/styles.css`, and `index.html`
 - `src/types/salary.ts`
 - `src/utils/`
+- `src/utils/formatPercentage.ts`

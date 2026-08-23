@@ -56,3 +56,12 @@
 - **Accessibility and responsive review**: Uses semantic header/main/footer, labeled form and fieldset, associated hints/errors, `aria-invalid`, a polite results announcement, disclosure state/control relationships, focus transfer to assumptions, visible focus styles, 44px-or-larger controls, mobile stacking at 320/375px, tabular numerals, and a text legend that does not rely on color.
 - **Security checklist**: Passed all applicable items; see `docs/security_checklist.md`. Validation tests explicitly prove invalid values do not call the salary engine.
 - **Verification**: `npm test` passed (12 files, 83 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### UJ-01 interaction hardening
+
+- Invalidated rendered results and cleared their announcement immediately when either RAL or monthly-payment input changes; recalculation is required before results return.
+- Replaced the large nested live result tree with one persistent screen-reader-only status region that mounts on first paint and receives a concise success message.
+- Made assumptions a coherent two-way disclosure, including dynamic trigger text and focus restoration from its close control; formula disclosures now include the calculation-row label in each accessible name.
+- Derived both national and regional bracket descriptions, including their final open bounds, from centralized rule arrays. Added one shared Italian percentage formatter for visible legends and the composition bar’s accessible summary.
+- TDD evidence: the new regressions initially failed for the missing formatter, stale results, absent persistent status, duplicate disclosure names, incomplete bracket prose, and focus behavior; all passed after implementation.
+- Reverification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

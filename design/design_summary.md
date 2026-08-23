@@ -30,7 +30,7 @@
 - Local tax: progressive Lombardia rates of 1.23%, 1.58%, 1.72%, and 1.73%; Milano applies 0.8% to the entire taxable income only above its EUR 23,000 exemption threshold.
 - Calculations intentionally retain full JavaScript ratio precision instead of the official first-four-decimal employee-deduction convention, without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
 - Each fiscal rule family has frozen traceability metadata for official authority, title/instrument/page where applicable, URL, effective year, and verification date.
-- UJ-01 exposes the annual calculation through a client-only UI. Results remain hidden until a valid submit; malformed, non-positive, and out-of-range input never reaches the engine. Docker, deployment, authentication, persistence, and backend APIs remain out of scope.
+- UJ-01 exposes the annual calculation through a client-only UI. Results remain hidden until a valid submit and are invalidated on any RAL or payment edit; a persistent concise live region announces successful recalculation. Malformed, non-positive, and out-of-range input never reaches the engine. Docker, deployment, authentication, persistence, and backend APIs remain out of scope.
 
 ## Verification Commands
 

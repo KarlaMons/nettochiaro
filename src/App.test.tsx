@@ -34,6 +34,17 @@ describe('App', () => {
     expect(screen.getByRole('textbox', { name: /retribuzione annua lorda/i })).toHaveValue('30.000')
     expect(screen.getByRole('radio', { name: /13 mensilità/i })).toBeChecked()
     expect(screen.queryByText('Netto annuale stimato')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+  })
+
+  it('announces a concise result in the persistent status region', async () => {
+    render(<App />)
+    const status = screen.getByRole('status')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Calcola il netto' }))
+
+    expect(screen.getByRole('status')).toBe(status)
+    expect(status).toHaveTextContent(/Calcolo completato.*23\.425,52\s€/)
   })
 
   it('calculates and renders the reconciled 30,000 reference case', async () => {
@@ -71,6 +82,9 @@ describe('App', () => {
     expect(within(breakdown).getByText(/\+ 2\.044,29\s€/)).toBeInTheDocument()
     expect(within(breakdown).getByText(/\+ 1\.000,00\s€/)).toBeInTheDocument()
     expect(within(breakdown).getByText(/− 2\.757,00\s€/)).toBeInTheDocument()
+    const composition = screen.getByRole('img', { name: /Netto:/ })
+    expect(composition).toHaveAccessibleName(expect.stringContaining('78,1%'))
+    expect(composition.getAttribute('aria-label')).not.toMatch(/\d+\.\d+%/)
   })
 
   it('keeps annual results unchanged and shows the precise 14-payment average', async () => {
@@ -85,6 +99,32 @@ describe('App', () => {
         'Media calcolata su 14 mensilità. I cedolini effettivi possono variare.',
       ),
     ).toBeInTheDocument()
+  })
+
+  it('invalidates the displayed result immediately when the RAL changes', async () => {
+    render(<App />)
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Calcola il netto' }))
+    expect(screen.getByText('Netto annuale stimato')).toBeInTheDocument()
+
+    await user.type(screen.getByRole('textbox', { name: /retribuzione annua lorda/i }), '0')
+
+    expect(screen.queryByText('Netto annuale stimato')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+  })
+
+  it('invalidates the displayed result when payments change until resubmission', async () => {
+    render(<App />)
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Calcola il netto' }))
+
+    await user.click(screen.getByRole('radio', { name: /14 mensilità/i }))
+
+    expect(screen.queryByText('Netto annuale stimato')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+    await user.click(screen.getByRole('button', { name: 'Calcola il netto' }))
+    expect(screen.getByText('Netto annuale stimato')).toBeInTheDocument()
+    expect(screen.getByText(/Media calcolata su 14 mensilità/)).toBeInTheDocument()
   })
 
   it.each([
@@ -112,25 +152,35 @@ describe('App', () => {
     const user = userEvent.setup()
     await user.click(screen.getByRole('button', { name: 'Calcola il netto' }))
 
-    const button = screen.getAllByRole('button', { name: 'Mostra formula' })[0]
+    const button = screen.getByRole('button', { name: 'Mostra formula: Contributi previdenziali' })
+    expect(screen.getByRole('button', { name: 'Mostra formula: Imponibile fiscale' })).toBeInTheDocument()
     expect(button).toHaveAttribute('aria-expanded', 'false')
     await user.click(button)
     expect(button).toHaveAttribute('aria-expanded', 'true')
-    expect(button).toHaveAccessibleName('Nascondi formula')
+    expect(button).toHaveAccessibleName('Nascondi formula: Contributi previdenziali')
     const panel = document.getElementById(button.getAttribute('aria-controls') ?? '')
     expect(panel).toHaveTextContent('Base di calcolo')
     expect(panel).toHaveTextContent('Regola 2026')
     expect(within(panel as HTMLElement).getByRole('link')).toHaveAttribute('href', expect.stringMatching(/^https:\/\//))
   })
 
-  it('opens and focuses the assumptions section from the form control', async () => {
+  it('toggles assumptions coherently and restores focus after the close control', async () => {
     render(<App />)
     const user = userEvent.setup()
-    await user.click(screen.getByRole('button', { name: 'Vedi le ipotesi utilizzate' }))
+    const trigger = screen.getByRole('button', { name: 'Vedi le ipotesi utilizzate' })
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await user.click(trigger)
 
     const assumptions = screen.getByRole('region', { name: 'Cosa considera questa proiezione' })
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    expect(trigger).toHaveAccessibleName('Nascondi le ipotesi utilizzate')
     expect(assumptions).toHaveFocus()
     expect(within(assumptions).getByRole('heading', { name: 'Incluso' })).toBeInTheDocument()
     expect(within(assumptions).getByRole('heading', { name: 'Non incluso' })).toBeInTheDocument()
+
+    await user.click(within(assumptions).getByRole('button', { name: 'Chiudi' }))
+    expect(trigger).toHaveFocus()
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('region', { name: 'Cosa considera questa proiezione' })).not.toBeInTheDocument()
   })
 })

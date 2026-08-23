@@ -39,6 +39,16 @@ function formatRate(rate: number) {
   return `${(rate * 100).toLocaleString('it-IT', { maximumFractionDigits: 2 })}%`
 }
 
+function formatBrackets(brackets: readonly { readonly upperBound: number; readonly rate: number }[]) {
+  return brackets.map((bracket, index) => {
+    const previousUpperBound = brackets[index - 1]?.upperBound
+    const bound = Number.isFinite(bracket.upperBound)
+      ? `fino a ${bracket.upperBound.toLocaleString('it-IT')} €`
+      : `oltre ${previousUpperBound?.toLocaleString('it-IT')} €`
+    return `${formatRate(bracket.rate)} ${bound}`
+  }).join('; ')
+}
+
 export function buildCalculationBreakdown(result: SalaryCalculationResult): readonly CalculationStep[] {
   const sources = TAX_RULES_2026_SOURCE_METADATA.sources
   return [
@@ -53,7 +63,7 @@ export function buildCalculationBreakdown(result: SalaryCalculationResult): read
     },
     {
       id: 'irpef-lorda', label: 'IRPEF lorda', value: result.grossIrpef, sign: 'neutral',
-      details: details(result.taxableIncome, 'Somma dell’imposta calcolata progressivamente in ogni scaglione', IRPEF_BRACKETS.map((bracket) => `${formatRate(bracket.rate)} fino a ${Number.isFinite(bracket.upperBound) ? `${bracket.upperBound.toLocaleString('it-IT')} €` : 'oltre 50.000 €'}`).join('; '), result.grossIrpef, 'L’IRPEF lorda applica aliquote crescenti alle sole quote di reddito comprese nei rispettivi scaglioni.', sources.irpef),
+      details: details(result.taxableIncome, 'Somma dell’imposta calcolata progressivamente in ogni scaglione', formatBrackets(IRPEF_BRACKETS), result.grossIrpef, 'L’IRPEF lorda applica aliquote crescenti alle sole quote di reddito comprese nei rispettivi scaglioni.', sources.irpef),
     },
     {
       id: 'detrazione-lavoro', label: 'Detrazione lavoro dipendente', value: result.employeeDeduction, sign: 'plus',
@@ -69,7 +79,7 @@ export function buildCalculationBreakdown(result: SalaryCalculationResult): read
     },
     {
       id: 'regionale', label: 'Addizionale regionale', value: result.regionalTax, sign: 'minus',
-      details: details(result.taxableIncome, 'Somma dell’addizionale calcolata progressivamente per scaglioni lombardi', LOMBARDY_REGIONAL_TAX_BRACKETS.map((bracket) => formatRate(bracket.rate)).join(' · '), result.regionalTax, 'L’addizionale regionale della Lombardia si applica all’imponibile fiscale per scaglioni.', sources.regionalTax),
+      details: details(result.taxableIncome, 'Somma dell’addizionale calcolata progressivamente per scaglioni lombardi', formatBrackets(LOMBARDY_REGIONAL_TAX_BRACKETS), result.regionalTax, 'L’addizionale regionale della Lombardia si applica all’imponibile fiscale per scaglioni.', sources.regionalTax),
     },
     {
       id: 'comunale', label: 'Addizionale comunale', value: result.municipalTax, sign: 'minus',

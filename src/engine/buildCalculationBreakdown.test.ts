@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import { calculateSalary } from './calculateSalary'
 import { buildCalculationBreakdown } from './buildCalculationBreakdown'
-import { TAX_RULES_2026_SOURCE_METADATA } from './taxRules2026'
+import {
+  IRPEF_BRACKETS,
+  LOMBARDY_REGIONAL_TAX_BRACKETS,
+  TAX_RULES_2026_SOURCE_METADATA,
+} from './taxRules2026'
 
 describe('buildCalculationBreakdown', () => {
   const result = calculateSalary({ grossAnnualSalary: 30_000, monthlyPayments: 13 })
@@ -48,5 +52,21 @@ describe('buildCalculationBreakdown', () => {
     expect(municipal?.details?.source).toBe(TAX_RULES_2026_SOURCE_METADATA.sources.municipalTax)
     expect(steps.filter((step) => step.details)).toHaveLength(8)
     expect(steps.filter((step) => step.details).every((step) => step.details?.ruleYear === 2026)).toBe(true)
+  })
+
+  it('describes every national and regional bracket boundary from centralized rules', () => {
+    const steps = buildCalculationBreakdown(result)
+    const nationalRule = steps.find((step) => step.label === 'IRPEF lorda')?.details?.rule ?? ''
+    const regionalRule = steps.find((step) => step.label === 'Addizionale regionale')?.details?.rule ?? ''
+
+    for (const bracket of IRPEF_BRACKETS.slice(0, -1)) {
+      expect(nationalRule).toContain(bracket.upperBound.toLocaleString('it-IT'))
+    }
+    expect(nationalRule).toContain(`oltre ${IRPEF_BRACKETS.at(-2)?.upperBound.toLocaleString('it-IT')}`)
+
+    for (const bracket of LOMBARDY_REGIONAL_TAX_BRACKETS.slice(0, -1)) {
+      expect(regionalRule).toContain(bracket.upperBound.toLocaleString('it-IT'))
+    }
+    expect(regionalRule).toContain(`oltre ${LOMBARDY_REGIONAL_TAX_BRACKETS.at(-2)?.upperBound.toLocaleString('it-IT')}`)
   })
 })
