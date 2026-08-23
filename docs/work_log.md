@@ -13,3 +13,8 @@
 - Isolated browser production types from Vitest and Node.js tooling types with dedicated strict TypeScript configurations.
 - Declared supported engines for jsdom 30 (`^24.15.0 || >=26.0.0`), pinned local Node.js to 24.15.0, and declared npm 11.17.0 as the package manager.
 - Reverification: `npm run typecheck`, `npm run lint`, `npm test` (1 file, 1 test), and `npm run build` all passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### IT-01 supported-runtime enforcement
+
+- Enabled npm strict engine checks and aligned `@types/node` with the pinned Node.js 24 development runtime.
+- Reverification: `npm run typecheck`, `npm run lint`, `npm test` (1 file, 1 test), and `npm run build` all passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

@@ -30,5 +30,5 @@
 
 - Static browser application with no secrets, sensitive-data storage, external inputs, protected routes, database, uploads, or server responses in IT-01.
 - Dependencies are installed from the public npm registry and committed through `package-lock.json`.
-- `package.json` accepts Node.js `^24.15.0 || >=26.0.0`, matching jsdom 30's supported even-numbered runtime lines; `.nvmrc` pins local development to 24.15.0.
+- `package.json` accepts Node.js `^24.15.0 || >=26.0.0`, matching jsdom 30's supported even-numbered runtime lines; `.nvmrc` pins local development to 24.15.0 and `.npmrc` enforces the engine constraints.
 - React escapes rendered text by default; no raw HTML rendering is used.
