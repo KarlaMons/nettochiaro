@@ -1,6 +1,7 @@
 const EUR_CURRENCY_FORMATTER = new Intl.NumberFormat('it-IT', {
   style: 'currency',
   currency: 'EUR',
+  useGrouping: true,
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })

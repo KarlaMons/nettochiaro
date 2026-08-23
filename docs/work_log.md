@@ -45,3 +45,14 @@
 - Hardened Italian-number parsing so a grouped number may use dots, normal spaces, or non-breaking spaces, but cannot mix separator styles.
 - TDD evidence: all six new assertions initially failed against generic metadata and permissive mixed-separator parsing; after implementation, all 11 test files and 71 tests passed.
 - Reverification: `npm test` passed (11 files, 71 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+## 2026-08-23 — UJ-01: Transparent Salary Calculator
+
+- **Status**: Completed.
+- **Scope**: Replaced the scaffold placeholder with the approved Italian RAL-to-net journey. Docker, deployment, `README.md`, and `AGENTS.md` remain unchanged.
+- **TDD evidence**: New component and adapter suites first failed against the placeholder and missing adapter. Implementation then made the focused suites pass; a static check exposed an unsupported `Intl` option spelling, which was corrected before full verification.
+- **Implementation**: Added a mobile-first accessible calculator with editable Italian RAL text, 13/14-payment radio controls, pre-engine validation and focused errors, submit-triggered results, four KPIs, an accessible salary-composition bar, formula disclosures, assumptions, official sources, and the approved warning. Updated title and description metadata.
+- **Architecture**: Added the pure `buildCalculationBreakdown` presentation adapter. It derives ordered values, signs, explanations, formula text, thresholds, year, and official source mappings from engine results and centralized 2026 constants; React only renders typed descriptors.
+- **Accessibility and responsive review**: Uses semantic header/main/footer, labeled form and fieldset, associated hints/errors, `aria-invalid`, a polite results announcement, disclosure state/control relationships, focus transfer to assumptions, visible focus styles, 44px-or-larger controls, mobile stacking at 320/375px, tabular numerals, and a text legend that does not rely on color.
+- **Security checklist**: Passed all applicable items; see `docs/security_checklist.md`. Validation tests explicitly prove invalid values do not call the salary engine.
+- **Verification**: `npm test` passed (12 files, 83 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.

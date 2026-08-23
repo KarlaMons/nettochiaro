@@ -11,13 +11,14 @@
 ## Current Module Map
 
 - `src/main.tsx`: browser entry point.
-- `src/App.tsx`: neutral application placeholder until the product UI journey is approved.
-- `src/styles.css`: minimal global scaffold styles.
+- `src/App.tsx`: accessible Italian calculator journey with guarded RAL input, 13/14-payment selection, result KPIs, composition, disclosures, assumptions, sources, and disclaimer.
+- `src/styles.css`: mobile-first sober visual system with responsive cards, tabular figures, visible focus states, and color-independent composition labels.
 - `src/test/setup.ts`: shared browser-test matchers and cleanup.
 - `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`: isolated production-browser, test, and tooling type environments.
 - `src/types/salary.ts`: explicit public input/result types for salary calculations.
 - `src/engine/taxRules2026.ts`: immutable 2026 constants, progressive brackets, supported ranges, scenario, precision policy, and rule-specific official-source provenance.
 - `src/engine/`: pure modules for employee contributions, gross IRPEF, employee deduction, tax-wedge deduction, Lombardia regional tax, Milano municipal tax, and the aggregate salary calculation.
+- `src/engine/buildCalculationBreakdown.ts`: pure presentation adapter that derives ordered formula/source descriptors from engine results and centralized 2026 rules; React contains no fiscal formulas.
 - `src/utils/`: strict Italian-number parsing and display-only EUR currency formatting.
 
 ## IT-02 Fiscal Contract
@@ -29,7 +30,7 @@
 - Local tax: progressive Lombardia rates of 1.23%, 1.58%, 1.72%, and 1.73%; Milano applies 0.8% to the entire taxable income only above its EUR 23,000 exemption threshold.
 - Calculations intentionally retain full JavaScript ratio precision instead of the official first-four-decimal employee-deduction convention, without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
 - Each fiscal rule family has frozen traceability metadata for official authority, title/instrument/page where applicable, URL, effective year, and verification date.
-- The final product UI, Docker, deployment, authentication, persistence, and backend APIs remain out of scope.
+- UJ-01 exposes the annual calculation through a client-only UI. Results remain hidden until a valid submit; malformed, non-positive, and out-of-range input never reaches the engine. Docker, deployment, authentication, persistence, and backend APIs remain out of scope.
 
 ## Verification Commands
 
@@ -47,3 +48,4 @@
 - `package.json` accepts Node.js `^24.15.0 || >=26.0.0`, matching jsdom 30's supported even-numbered runtime lines; `.nvmrc` pins local development to 24.15.0 and `.npmrc` enforces the engine constraints.
 - React escapes rendered text by default; no raw HTML rendering is used.
 - IT-02 adds no network, persistence, credential, protected-route, upload, or raw-HTML surface. The calculation boundary rejects non-number inputs, non-finite RAL values, out-of-range RAL values, and unsupported payment counts; the parser rejects malformed or ambiguous numeric text.
+- UJ-01 keeps all processing local, validates and associates form errors before calculation, uses React's escaped text rendering, and opens official links with `rel="noreferrer"`. No secrets, storage, API calls, authentication, database, uploads, or raw HTML were introduced.
