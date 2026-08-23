@@ -12,6 +12,8 @@
 - The obsolete 2025 planning-first Next.js scaffold has been superseded.
 - The app is client-only at this stage, with no backend, persistence, authentication, Docker, tax formulas, or final product UI.
 - Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
+- Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
+- Local development is pinned to Node.js 24.15.0 and npm 11.17.0; package engines also accept supported Node.js 26+ runtimes.
 - `CLAUDE.md` remains the engineering governance source. `AGENTS.md` and `README.md` are intentionally unchanged in IT-01.
 
 ## Blockers and Pending Decisions
@@ -25,4 +27,5 @@
 - `implementation/task_tracker.md`
 - `docs/work_log.md`
 - `package.json`
+- `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`
 - `src/`
