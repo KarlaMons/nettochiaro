@@ -26,6 +26,12 @@ describe('TAX_RULES_2026_SOURCE_METADATA', () => {
 
     expect(sources.irpef.instrument).toContain('art. 1, comma 3')
     expect(sources.employeeDeduction.page).toBe(149)
+    expect(sources.employeeDeduction.referenceTaxPeriod).toBe(2025)
+    expect(sources.employeeDeduction.applicabilityNote).toContain(
+      'carried into the approved 2026 projection because the rule is unchanged',
+    )
+    expect(sources.irpef.referenceTaxPeriod).toBeUndefined()
+    expect(sources.irpef.instrument).toContain('Legge 30 dicembre 2025')
     expect(sources.taxWedge.instrument).toContain('Circolare n. 4/E')
     expect(sources.employeeContributions.instrument).toContain(
       'Circolare n. 6/2026',

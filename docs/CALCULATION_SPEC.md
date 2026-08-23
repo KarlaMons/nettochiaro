@@ -28,7 +28,7 @@ Applicazione progressiva per porzioni di imponibile:
 - `28.000 < I ≤ 50.000`: `28.000 × 0,23 + (I − 28.000) × 0,33`;
 - `I > 50.000`: `28.000 × 0,23 + 22.000 × 0,33 + (I − 50.000) × 0,43`.
 
-Il 33% deriva dalla legge di bilancio 2026, non dalle istruzioni del modello 730/2026.
+Il 33% deriva dalla legge 30 dicembre 2025, n. 199, efficace per il 2026, non dalle istruzioni del modello 730/2026.
 
 ### 4. Detrazione per lavoro dipendente
 
@@ -109,7 +109,9 @@ La riconciliazione è `23.425,521215384615 + 6.574,478784615385 = 30.000` entro 
 
 ## Precisione e visualizzazione
 
-Il motore non arrotonda gli intermedi e conserva la precisione JavaScript. Euro e percentuali vengono formattati in italiano soltanto al confine di presentazione (euro a due decimali). Per scelta deliberata, i rapporti delle detrazioni non vengono troncati alle prime quattro cifre decimali. Le istruzioni **730/2026** sono la fonte della tabella di detrazione e della convenzione di calcolo/arrotondamento documentata; il riferimento “730/2026” non è la fonte dell’aliquota IRPEF del 33%, introdotta dalla legge 30 dicembre 2025, n. 199 con efficacia 2026.
+Il motore non arrotonda gli intermedi e conserva la precisione JavaScript. Euro e percentuali vengono formattati in italiano soltanto al confine di presentazione (euro a due decimali). Per scelta deliberata, i rapporti delle detrazioni non vengono troncati alle prime quattro cifre decimali.
+
+Il **Modello 730/2026 viene presentato nel 2026, ma riguarda i redditi del periodo d’imposta 2025**. In questa specifica è usato soltanto come evidenza ufficiale della formula della detrazione per lavoro dipendente e della convenzione di considerare le prime quattro cifre decimali dei relativi rapporti. La formula è riportata nella proiezione 2026 perché, nel perimetro approvato, è assunta invariata. L’aliquota IRPEF nazionale del 33% è invece una regola nuova e indipendente: la sua fonte è la legge 30 dicembre 2025, n. 199, efficace nel 2026.
 
 ## Razionale, assunzioni e fonti
 
@@ -117,7 +119,7 @@ Il modello privilegia una stima annuale spiegabile e riconciliabile. Assume 9,19
 
 - [INPS, Circolare n. 6 del 30 gennaio 2026](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2026.01.circolare-numero-6-del-30-01-2026_15151.html)
 - [Gazzetta Ufficiale, legge 30 dicembre 2025, n. 199, art. 1, comma 3](https://www.gazzettaufficiale.it/eli/id/2025/12/30/25G00212/sg)
-- [Agenzia delle Entrate, istruzioni 730/2026, tabella 6, p. 149](https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf)
+- [Agenzia delle Entrate, istruzioni 730/2026 per i redditi 2025, tabella 6, p. 149](https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf)
 - [Agenzia delle Entrate, lavoro dipendente e pensioni](https://infoprecompilata.agenziaentrate.gov.it/portale/semplificata-mod-lavoro-dipendente-e-pensioni)
 - [Regione Lombardia, addizionale regionale IRPEF](https://www.regione.lombardia.it/bollo-auto-e-tributi-regionali/red-addizionale-regionale-irpef)
 - [Comune di Milano, addizionale comunale IRPEF](https://www.comune.milano.it/aree-tematiche/tributi/addizionale-comunale-irpef)

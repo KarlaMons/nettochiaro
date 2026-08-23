@@ -45,7 +45,7 @@ Smoke test finale con il solo container `ral-netto-calculator-it03-final` su por
 
 ## Confronto con fonti esterne
 
-La validazione esterna svolta riguarda esclusivamente la corrispondenza fra costanti/formule e le fonti istituzionali registrate in `src/engine/taxRules2026.ts`: INPS, Gazzetta Ufficiale, Agenzia delle Entrate, Regione Lombardia e Comune di Milano. Non è stato effettuato né dichiarato alcun confronto con software paghe, cedolini reali o simulatori commerciali.
+La validazione esterna svolta riguarda esclusivamente la corrispondenza fra costanti/formule e le fonti istituzionali registrate in `src/engine/taxRules2026.ts`: INPS, Gazzetta Ufficiale, Agenzia delle Entrate, Regione Lombardia e Comune di Milano. Il 730/2026, presentato nel 2026 per i redditi 2025, comprova soltanto formula della detrazione da lavoro e convenzione delle prime quattro cifre decimali; la formula è assunta invariata nel perimetro 2026. Il 33% IRPEF applicabile nel 2026 è verificato separatamente sulla legge n. 199/2025. Non è stato effettuato né dichiarato alcun confronto con software paghe, cedolini reali o simulatori commerciali.
 
 ## Differenze residue attese
 

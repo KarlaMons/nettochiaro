@@ -38,7 +38,7 @@ La specifica completa, inclusi confini e caso da 30.000 euro, è in [docs/CALCUL
 
 - [INPS, Circolare n. 6/2026](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2026.01.circolare-numero-6-del-30-01-2026_15151.html): soglia contributiva aggiuntiva 2026.
 - [Legge 30 dicembre 2025, n. 199, art. 1, comma 3](https://www.gazzettaufficiale.it/eli/id/2025/12/30/25G00212/sg): aliquota IRPEF 2026 del 33% nel secondo scaglione.
-- [Agenzia delle Entrate, istruzioni 730/2026, tabella 6, p. 149](https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf): detrazione da lavoro e convenzione dei rapporti.
+- [Agenzia delle Entrate, istruzioni 730/2026, tabella 6, p. 149](https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf): modello presentato nel 2026 per i redditi 2025, usato soltanto come fonte ufficiale della formula della detrazione da lavoro e della convenzione delle prime quattro cifre decimali. La formula è assunta invariata nella proiezione 2026 approvata; il 33% IRPEF 2026 è invece documentato separatamente dalla legge n. 199/2025.
 - [Agenzia delle Entrate, lavoro dipendente e pensioni](https://infoprecompilata.agenziaentrate.gov.it/portale/semplificata-mod-lavoro-dipendente-e-pensioni): detrazione per cuneo fiscale.
 - [Regione Lombardia, addizionale regionale IRPEF](https://www.regione.lombardia.it/bollo-auto-e-tributi-regionali/red-addizionale-regionale-irpef) e [Comune di Milano, addizionale comunale IRPEF](https://www.comune.milano.it/aree-tematiche/tributi/addizionale-comunale-irpef).
 

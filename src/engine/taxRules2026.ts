@@ -10,6 +10,8 @@ interface FiscalRuleSource {
   readonly page?: number
   readonly url: string
   readonly effectiveYear: 2026
+  readonly referenceTaxPeriod?: 2025 | 2026
+  readonly applicabilityNote?: string
   readonly verifiedOn: '2026-08-23'
 }
 
@@ -114,11 +116,15 @@ export const TAX_RULES_2026_SOURCE_METADATA: TaxRuleSourceMetadata =
       }),
       employeeDeduction: Object.freeze({
         authority: 'Agenzia delle Entrate',
-        title: 'Modello 730/2026 — Istruzioni per la compilazione',
+        title:
+          'Modello 730/2026 — Istruzioni per la compilazione (redditi 2025)',
         instrument: 'Tabella 6 — Detrazioni per redditi di lavoro dipendente',
         page: 149,
         url: 'https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf',
         effectiveYear: 2026,
+        referenceTaxPeriod: 2025,
+        applicabilityNote:
+          'Official evidence for the employee-deduction formula and first-four-decimal ratio convention; carried into the approved 2026 projection because the rule is unchanged in scope',
         verifiedOn: '2026-08-23',
       }),
       taxWedge: Object.freeze({

@@ -74,3 +74,9 @@
 - **Docker evidence**: `docker build -t ral-netto-calculator .` passed and produced final image `sha256:68b122db66961852cf2566a0510cf5c76fe17c274ee5eafecc80136f3d907421`. Runtime inspection found no Node/npm and `nginx -t` passed. Container `ral-netto-calculator-it03-final` on free host port 18080 became healthy; root, deep-link fallback, health endpoint, security/cache headers, and unknown-asset 404 passed curl checks. That exact container was then stopped and removed.
 - **Security**: Final applicable checklist passed. There are no credentials or dynamic services; the runtime contains only Nginx/static files. CSP, MIME, frame, referrer, permissions, caching, health response, and lack of server-version disclosure were verified. Server-side auth/database/upload items remain not applicable.
 - **Verification**: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed. Full command-level evidence and residual differences are in `docs/VALIDATION.md`.
+
+### IT-03 730 reference-period clarification
+
+- Clarified that Modello 730/2026 is filed in 2026 for 2025 income and is used only as official evidence of the employee-deduction formula and first-four-decimal ratio convention. The unchanged formula is carried into the approved 2026 projection, whereas the new 33% IRPEF rate is independently sourced to Law 199/2025 effective in 2026.
+- Added type-safe `referenceTaxPeriod` and applicability-note provenance for the employee-deduction source, plus regression assertions. Fiscal constants and formulas were not changed.
+- Verification: `npm test` passed (13 files, 88 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
