@@ -1,50 +1,57 @@
 # Design Summary
 
-## Stack
+## Approved Foundation
 
-- Next.js 16.3.2 App Router, React 19.2.8, strict TypeScript, Tailwind CSS, Node.js 24
-- Tests: Vitest + Testing Library; Playwright E2E
-- Persistence/auth/runtime APIs: none
-- Deployment: standalone non-root Docker on EasyPanel from private GitHub `main`
+- Product: JetHR RAL-to-net calculator for the Italian 2026 tax year.
+- Runtime: client-only React application built with Vite and strict TypeScript; Node.js 24.15.x is the pinned development line.
+- Testing: Vitest, jsdom, and Testing Library.
+- Persistence, authentication, backend APIs, and runtime credentials: none in the current scope.
+- Delivery: multi-stage Docker build with explicit Alpine variants and verified multi-architecture manifest digests. Node.js 24.15.0 is build-only; stable Nginx Alpine runs fully as UID/GID 101 on internal port 80 using only a file-level `cap_net_bind_service` grant. No external deployment is performed by the repository.
 
-## Module Map
+## Current Module Map
 
-- `app/`: one `/` page plus `GET /api/health`
-- `components/`: form, KPI/allocation, breakdown, rule explanations, methodology
-- `lib/tax/`: immutable rules, pure calculators, money helpers, orchestrator, types
-- Rule source of truth: `design/calculation_rules.md`
-- `tests/` and `e2e/`: unit/component and Playwright flows
+- `src/main.tsx`: browser entry point.
+- `src/App.tsx`: accessible Italian calculator journey with guarded RAL input, 13/14-payment selection, result KPIs, CSP-compatible SVG composition, disclosures, assumptions, sources, and disclaimer.
+- `src/styles.css`: mobile-first sober visual system with responsive cards, tabular figures, visible focus states, and color-independent composition labels.
+- `src/test/setup.ts`: shared browser-test matchers and cleanup.
+- `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`: isolated production-browser, test, and tooling type environments.
+- `src/types/salary.ts`: explicit public input/result types for salary calculations.
+- `src/engine/taxRules2026.ts`: immutable 2026 constants, progressive brackets, supported ranges, scenario, precision policy, and rule-specific official-source provenance.
+- `src/engine/`: pure modules for employee contributions, gross IRPEF, employee deduction, tax-wedge deduction, Lombardia regional tax, Milano municipal tax, and the aggregate salary calculation.
+- `src/engine/buildCalculationBreakdown.ts`: pure presentation adapter that derives ordered formula/source descriptors from engine results and centralized 2026 rules; React contains no fiscal formulas.
+- `src/utils/`: strict Italian-number parsing and display-only EUR currency formatting.
+- `Dockerfile`, `nginx.conf`, `.dockerignore`: digest-pinned static build, non-root Nginx with `/tmp` runtime paths, hardened SPA fallback, status-aware cache policy, `/healthz`, and delivery build-context exclusions.
+- `docs/CALCULATION_SPEC.md` and `docs/VALIDATION.md`: reviewer-facing fiscal contract, worked example, coverage, evidence, and residual differences.
 
-## Entity Overview
+## IT-02 Fiscal Contract
 
-- `CalculationInput` — RAL EUR 5k–120k; mensilità 12/13/14; `SalaryProjection` — full reconciled result
-- `TaxRule` — stable ID, rationale, formula, official source, caveat
-
-## Key Patterns
-
-- Fixed case: tax year 2025, permanent private employee, Milan, 365 days, no other income/relief
-- Deterministic browser calculation; no RAL persistence or transmission
-- Shared progressive brackets; monetary cents centralized; required ratios truncate to 4 decimals
-- Every result row maps to definition + rationale + formula + source + simplification
-- Monthly value is annual average, never a simulated payslip
+- Supported scenario: standard private non-manager permanent full-time employee for the full 2026 year, resident in Milano/Lombardia. Statutory employee and tax-wedge deductions are included; personal/additional relief, dependents, other deductions, and trattamento integrativo are excluded.
+- Public calculation input: finite gross annual salary from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments.
+- Contributions: 9.19% of RAL plus 1% of the portion above EUR 56,224.
+- National tax: progressive IRPEF of 23% through EUR 28,000, 33% through EUR 50,000, and 43% above; employee and tax-wedge deductions use the approved IT-02 formulas.
+- Local tax: progressive Lombardia rates of 1.23%, 1.58%, 1.72%, and 1.73%; Milano applies 0.8% to the entire taxable income only above its EUR 23,000 exemption threshold.
+- Calculations intentionally retain full JavaScript ratio precision instead of the official first-four-decimal employee-deduction convention, without internal currency rounding. `formatCurrency` applies two-decimal `it-IT` EUR formatting only at the display boundary.
+- Each fiscal rule family has frozen traceability metadata for official authority, title/instrument/page where applicable, URL, effective year, and verification date. Employee-deduction metadata separately records that the 730/2026 evidence concerns 2025 income while the unchanged formula is carried into the approved 2026 projection; the 33% IRPEF rate remains independently sourced to Law 199/2025 effective in 2026.
+- UJ-01 exposes the annual calculation through a client-only UI. Results remain hidden until a valid submit and are invalidated on any RAL or payment edit; a persistent concise live region announces successful recalculation. Malformed, non-positive, and out-of-range input never reaches the engine. Authentication, persistence, and backend APIs remain out of scope.
+- Salary composition uses SVG presentation attributes and self-hosted CSS classes rather than React inline styles, remaining compatible with the production `style-src 'self'` policy without `unsafe-inline`.
 
 ## Verification Commands
 
-- Start app: `npm run dev`
-- Unit/components: `npm test`
-- E2E: `npm run test:e2e`
+- Development server: `npm run dev`
+- Unit/component tests: `npm test`
+- Test watch mode: `npm run test:watch`
 - Lint: `npm run lint`
 - Typecheck: `npm run typecheck`
-- Build: `npm run build`
-- Container: `docker compose up --build`; health: `curl -f http://localhost:3000/api/health`
+- Production build: `npm run build`
+- Dependency audit: `npm audit --audit-level=high`
+- Delivery image: `docker build -t ral-netto-calculator .`
 
-## Credential Map
+## Security Posture
 
-- Level 1: none
-- Level 2: `NODE_ENV`, `PORT`, optional `NEXT_PUBLIC_SITE_URL`
-- Level 3: none; no admin panel
-
-## Installed Skills & MCPs
-
-- Selected: next-best-practices, playwright-e2e-testing, verification-before-completion
-- No MCP/plugin needed; official sources are build-time links only
+- Static browser application with no secrets, sensitive-data storage, external inputs, protected routes, database, uploads, or server responses in IT-01.
+- Dependencies are installed from the public npm registry and committed through `package-lock.json`.
+- `package.json` accepts Node.js `^24.15.0 || >=26.0.0`, matching jsdom 30's supported even-numbered runtime lines; `.nvmrc` pins local development to 24.15.0 and `.npmrc` enforces the engine constraints.
+- React escapes rendered text by default; no raw HTML rendering is used.
+- IT-02 adds no network, persistence, credential, protected-route, upload, or raw-HTML surface. The calculation boundary rejects non-number inputs, non-finite RAL values, out-of-range RAL values, and unsupported payment counts; the parser rejects malformed or ambiguous numeric text.
+- UJ-01 keeps all processing local, validates and associates form errors before calculation, uses React's escaped text rendering, and opens official links with `rel="noreferrer"`. No secrets, storage, API calls, authentication, database, uploads, or raw HTML were introduced.
+- IT-03 adds a static Nginx runtime with no Node executable, exact `/healthz`, hidden server version, restrictive compatible CSP, clickjacking/MIME/referrer/permissions headers, no-store HTML/errors, and immutable caching only for successful hashed Vite assets. Base-image updates require intentional tag/digest review and complete rebuild verification; digest pins do not provide automatic freshness. EasyPanel steps are documentation only; its documented App UI does not currently establish read-only-root/tmpfs support, so that remains unverified future hardening.

@@ -2,25 +2,53 @@
 
 ## Current State
 
-- **Project**: NettoChiaro — 2025 Milan RAL-to-net calculator prototype for Jet HR
-- **Phase**: Planning — written specification prepared, awaiting user review
-- **Last Completed**: Approved design captured in planning and design documents
-- **Next Step**: Review `docs/superpowers/specs/2026-08-23-nettochiaro-design.md`; after approval, create the implementation plan
+- **Project**: JetHR 2026 RAL-to-net calculator.
+- **Phase**: CI-backed review of the published UJ-01 Pull Request.
+- **Last Completed Work Unit**: UJ-01 pre-merge hardening — centralized RAL range, integrated threshold coverage, canonical source link, and read-only CI.
+- **Next Step**: Review Pull Request #1 checks and merge only after explicit user action. No external deployment has been performed.
 
-## Blockers
+## Scope and Decisions
 
-- Implementation is gated on user approval of the written specification.
-- Production hostname, private GitHub repository, and EasyPanel project are deferred until deployment.
+- The obsolete 2025 planning-first Next.js scaffold has been superseded.
+- The app is client-only, with no backend, persistence, authentication, or external runtime requests; a multi-stage Docker image serves only static assets through Nginx.
+- Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
+- The pure 2026 engine supports RAL from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments for the approved standard Milano/Lombardia employee scenario.
+- The UI imports that supported RAL range from the engine configuration; validation messages and guidance no longer maintain independent limit literals.
+- Fiscal constants and frozen rule-specific official-source provenance are centralized in `src/engine/taxRules2026.ts`; metadata distinguishes the 730/2026 reference to 2025 income from applicability of the unchanged employee-deduction formula in the approved 2026 projection. The 33% IRPEF rule is independently sourced to Law 199/2025 effective in 2026. Ratios intentionally retain full precision instead of the official first-four-decimal convention, and monetary values are formatted to two decimals only for display.
+- The supported scenario includes statutory employee and tax-wedge deductions but excludes personal/additional relief, dependents, other deductions, and trattamento integrativo. Italian-number grouping separators must be internally consistent.
+- UJ-01 is an Italian, mobile-first and keyboard-accessible single-page flow. It preserves the RAL as editable text, calculates only after valid submit, and renders annual/monthly KPIs, an accessible salary-composition bar, an adapter-driven formula reconciliation, assumptions, official sources, and the approved warning.
+- Fiscal formulas and source selection for UI disclosure live in the pure `buildCalculationBreakdown` adapter rather than React components.
+- The hardened interaction contract invalidates stale results on either input change, uses one persistent concise status region, gives each formula disclosure a unique accessible name, restores focus when assumptions close, derives bracket prose from centralized arrays, and shares Italian percentage formatting across visible and accessible text.
+- The salary-composition bar is an accessible SVG whose rectangle positions and widths derive from the existing percentage result fields. It emits no inline style attributes, so the deployed `style-src 'self'` CSP remains strict without `unsafe-inline`.
+- Production browser types are isolated from test and Node tooling types through separate strict TypeScript projects.
+- Local development is pinned to Node.js 24.15.0, Node 24 type declarations, and npm 11.17.0; strict package engines also accept supported Node.js 26+ runtimes.
+- Docker builds from digest-pinned Node.js `24.15.0-alpine3.23`, then copies only `dist/` into digest-pinned stable Nginx `1.30.4-alpine3.24`. Nginx runs entirely as UID/GID 101 on internal port 80 through its sole file capability, with PID/temp writes under `/tmp`. Runtime health, SPA fallback, status-aware cache/security headers, and absence of Node/npm/libcap were verified locally.
+- Base-image refreshes are manual and reviewed: update explicit tag, multi-architecture manifest digest, and pinned Alpine package versions together, then rebuild without cache and repeat all checks. EasyPanel read-only-root/`tmpfs` remains future hardening because the current documented App UI does not expose those settings.
+- `README.md`, `docs/CALCULATION_SPEC.md`, and `docs/VALIDATION.md` give the reviewer complete Italian product, formula, source, limitation, verification, and EasyPanel context.
+- `CLAUDE.md` remains the engineering governance source; `AGENTS.md` now reflects the current Vite/engine/Docker repository.
+- The public repository is `KarlaMons/nettochiaro`; Pull Request #1 compares `feature/ral-netto-2026` with `main`. GitHub Actions now verifies tests, types, lint, production build, and Docker build without secrets or write permissions.
 
-## Recent Changes
+## Blockers and Pending Decisions
 
-- Initialized Git.
-- Reframed the product around fiscal-domain logic and removed runtime AI.
-- Defined 2025 assumptions, deterministic formulas, transparent UX, Next.js architecture, testing, and deployment.
+- No implementation blockers.
+- The public demo URL remains `Da aggiungere dopo il deployment`; external deployment is intentionally not performed in IT-03.
+- Pull Request #1 remains open and must not be merged as part of the current pre-merge hardening work.
 
-## Key Context for Next Session
+## Key Files
 
-- Always read this file, `implementation/task_tracker.md`, and `design/design_summary.md` first.
-- No application code exists and written-spec approval is still required.
-- The evaluation objective is explaining why each fiscal rule applies, not demonstrating AI-generated output.
-- Official sources are versioned into the rule catalog; runtime never fetches tax data.
+- `design/design_summary.md`
+- `implementation/task_tracker.md`
+- `docs/work_log.md`
+- `package.json`
+- `tsconfig.app.json`, `tsconfig.test.json`, and `tsconfig.node.json`
+- `src/engine/`
+- `src/engine/buildCalculationBreakdown.ts`
+- `src/App.tsx`, `src/styles.css`, and `index.html`
+- `src/types/salary.ts`
+- `src/utils/`
+- `src/utils/formatPercentage.ts`
+- `src/utils/buildPercentageSegments.ts`
+- `README.md`
+- `docs/CALCULATION_SPEC.md`, `docs/VALIDATION.md`, and `docs/security_checklist.md`
+- `Dockerfile`, `nginx.conf`, and `.dockerignore`
+- `.github/workflows/ci.yml`

@@ -1,32 +1,19 @@
 # Task Tracker
 
-## Tracking Table
+| ID | Type | Name | Status | Security Checked | Notes |
+|---|---|---|---|---|---|
+| IT-01 | IT | Vite React TypeScript scaffold | completed | yes | Root foundation verified; no tax logic or final UI |
+| IT-02 | IT | Deterministic 2026 salary engine | completed | yes | Pure full-precision engine, official rule-specific provenance, strict parsing/validation, and complete 2026 boundary/reference coverage (71 tests) |
+| UJ-01 | UJ | Transparent RAL-to-net calculator | completed | yes | Accessible responsive Italian UI, centralized supported RAL range, integrated threshold/reconciliation coverage, CSP-compatible SVG composition, formula/assumption disclosures, official sources, and read-only GitHub CI (99 tests total) |
+| IT-03 | IT | Documented Docker delivery | completed | yes | Digest-pinned multi-stage image; Nginx UID101 on internal port 80 with file capability and `/tmp` writes; status-aware cache/security headers and SPA health verified; no external deploy |
 
-| ID | Type | Name | Milestone | Status | Security Checked | Review Passed | Notes |
-|----|------|------|-----------|--------|------------------|---------------|-------|
-| IT-01 | IT | Next.js Project Scaffold | M0 | pending | no | no | First implementation unit |
-| IT-02 | IT | Versioned 2025 Tax Engine | M0 | pending | no | no | Boundary tests and source mapping |
-| IT-03 | IT | Container and Operational Foundation | M0 | pending | no | no | EasyPanel standalone container |
-| UJ-01 | UJ | Calculate a Standard Salary Projection | M1 | pending | no | no | Core visitor flow |
-| UJ-02 | UJ | Inspect Every Step from RAL to Net | M1 | pending | no | no | Reconciled breakdown |
-| UJ-03 | UJ | Understand Why Each Rule Applies | M1 | pending | no | no | Rationale, formulas, sources |
-| UJ-04 | UJ | Use the Calculator Accessibly on Any Screen | M1 | pending | no | no | Responsive and WCAG hardening |
+## Scope Boundary
 
-## Milestones
-
-Milestones group related work units for review purposes. Run `/review` after each milestone completes.
-
-- **M0: Foundation** — All Infrastructure Tasks
-- **M1: Transparent Salary Projection** — Complete public calculation and explanation experience
-
-## Types
-
-- `IT` — Infrastructure Task (foundational, no UI)
-- `UJ` — User Journey (end-to-end user action)
+The approved Vite foundation, deterministic 2026 fiscal engine, UJ-01 product UI, and IT-03 documented Docker delivery are tracked here. GitHub CI validates the published feature and Pull Request without deployment or write permissions; IT-03 prepares but does not execute an external deployment.
 
 ## Status Values
 
-- `pending` — not started
-- `in_progress` — actively being implemented
-- `completed` — finished and verified
-- `blocked` — waiting on a dependency or decision
+- `pending`: not started.
+- `in_progress`: actively being implemented.
+- `completed`: implemented, verified, documented, and committed.
+- `blocked`: waiting on a dependency or decision.
