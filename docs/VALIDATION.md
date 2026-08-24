@@ -9,7 +9,7 @@ La suite Vitest copre:
 - esenzione Milano a 23.000 inclusi e aliquota sull’intero imponibile sopra soglia;
 - tutti i confini stretti/inclusivi della detrazione da lavoro (15.000, 25.000, 28.000, 35.000, 50.000), inclusi i 65 euro e la precisione del rapporto;
 - tutti i confini del cuneo (20.000, 32.000, 40.000) e l’azzeramento dell’IRPEF netta;
-- caso integrato da RAL 30.000, percentuali e riconciliazione `netto + trattenute = RAL`;
+- casi integrati da RAL 25.000, 26.000, 30.000, 31.000, 56.000, 56.224 e 60.000, incluse soglie Milano, scaglioni IRPEF, contributo aggiuntivo e riconciliazione `netto + contributi + imposte = RAL`;
 - RAL minima/massima incluse, valori fuori intervallo, non finiti e tipi runtime errati;
 - parser italiano: formati accettati, separatori di migliaia coerenti e input malformati/ambigui respinti;
 - formattazione euro a due decimali solo in output e percentuali in notazione italiana;
@@ -17,21 +17,21 @@ La suite Vitest copre:
 - adattatore delle formule: ordine, segni, riconciliazione, fonti e descrizioni derivate dagli scaglioni;
 - interfaccia: stato iniziale, submit, caso 30.000, media su 14, errori associati e focus, invalidazione di risultati obsoleti, annunci accessibili, disclosure di formule/ipotesi e ripristino del focus.
 
-## Comandi ed esiti IT-03
+## Ultima verifica completa
 
-Eseguiti il 23 agosto 2026 nella branch `feature/ral-netto-2026`:
+Eseguiti il 24 agosto 2026 nella branch `feature/ral-netto-2026`:
 
 | Comando | Esito osservato |
 |---|---|
-| `npm test` | superato: 14 file, 91 test, 0 fallimenti |
+| `npm test` | superato: 14 file, 99 test, 0 fallimenti |
 | `npm run typecheck` | superato: tutti e tre i progetti TypeScript senza errori |
 | `npm run lint` | superato: ESLint senza errori |
-| `npm run build` | superato: Vite 8.2.2, 28 moduli trasformati, output statico in `dist/` |
+| `npm run build` | superato: Vite 8.2.2, 29 moduli trasformati, output statico in `dist/` |
 | `npm audit --audit-level=high` | superato: 0 vulnerabilità rilevate |
 | `git diff --check` | superato: nessun errore di whitespace |
-| `docker build --no-cache -t ral-netto-calculator .` | superato; build multi-stage con `npm ci` e `npm run build`, immagine finale `sha256:29613b559fa6979b71d9b8a293f7e9b8525d07c60acb3696e751d13a427bbfb9` |
+| `docker build --no-cache -t nettochiaro-final-check .` | superato; build multi-stage con `npm ci` e `npm run build`, immagine finale `sha256:98747ebb3d1fcb9a09cf26fde5986d08a2cd664a27160131182dfb8083eae125` |
 
-I digest degli indici multi-architettura sono stati ricavati e verificati con `docker buildx imagetools inspect`: Node `24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f`; Nginx `1.30.4-alpine3.24@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46`. Il log di build ha confermato `cap_net_bind_service=ep`; una scansione diagnostica effimera con `getcap -r /` ha restituito soltanto `/usr/sbin/nginx cap_net_bind_service=ep`. Gli strumenti libcap sono poi assenti dall’immagine normale.
+La verifica di consegna IT-03 ha inoltre ricavato e verificato i digest degli indici multi-architettura con `docker buildx imagetools inspect`: Node `24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f`; Nginx `1.30.4-alpine3.24@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46`. Il log di build ha confermato `cap_net_bind_service=ep`; una scansione diagnostica effimera con `getcap -r /` ha restituito soltanto `/usr/sbin/nginx cap_net_bind_service=ep`. Gli strumenti libcap sono poi assenti dall’immagine normale.
 
 Ispezione runtime: `Config.User` è `nginx`; `id` restituisce UID/GID 101. `docker top` mostra master e tutti i worker Nginx come UID 101. PID e cinque directory temporanee sono sotto `/tmp`, scrivibili e di proprietà 101:101. `command -v node`, `command -v npm` e l’elenco pacchetti Alpine non hanno trovato Node/npm/libcap nell’immagine finale. `docker image inspect` ha confermato porta esposta `80/tcp` e health check HTTP su `/healthz`.
 

@@ -2,14 +2,20 @@ import { type FormEvent, useEffect, useRef, useState } from 'react'
 
 import { buildCalculationBreakdown, type CalculationStep } from './engine/buildCalculationBreakdown'
 import { calculateSalary } from './engine/calculateSalary'
-import { TAX_RULES_2026_SOURCE_METADATA } from './engine/taxRules2026'
+import {
+  SUPPORTED_GROSS_ANNUAL_SALARY,
+  TAX_RULES_2026_SOURCE_METADATA,
+} from './engine/taxRules2026'
 import type { MonthlyPayments, SalaryCalculationResult } from './types/salary'
 import { buildPercentageSegments } from './utils/buildPercentageSegments'
 import { formatCurrency } from './utils/formatCurrency'
 import { formatPercentage } from './utils/formatPercentage'
 import { parseItalianNumber } from './utils/parseItalianNumber'
 
-const RANGE_ERROR = 'Inserisci una RAL compresa tra 25.000 e 100.000 euro.'
+const minimumSupportedRal = SUPPORTED_GROSS_ANNUAL_SALARY.minimum.toLocaleString('it-IT')
+const maximumSupportedRal = SUPPORTED_GROSS_ANNUAL_SALARY.maximum.toLocaleString('it-IT')
+const supportedRalRange = `${minimumSupportedRal} e ${maximumSupportedRal}`
+const RANGE_ERROR = `Inserisci una RAL compresa tra ${supportedRalRange} euro.`
 
 function validateRal(value: string): { amount?: number; error?: string } {
   if (!value.trim()) return { error: 'Inserisci la RAL.' }
@@ -17,7 +23,12 @@ function validateRal(value: string): { amount?: number; error?: string } {
   try {
     const amount = parseItalianNumber(value)
     if (amount <= 0) return { error: 'Inserisci una RAL maggiore di zero.' }
-    if (amount < 25_000 || amount > 100_000) return { error: RANGE_ERROR }
+    if (
+      amount < SUPPORTED_GROSS_ANNUAL_SALARY.minimum ||
+      amount > SUPPORTED_GROSS_ANNUAL_SALARY.maximum
+    ) {
+      return { error: RANGE_ERROR }
+    }
     return { amount }
   } catch {
     return { error: 'Inserisci un importo numerico valido.' }
@@ -144,7 +155,7 @@ function App() {
         <section className="card calculator-card" aria-labelledby="calculator-title">
           <div className="form-intro"><p className="eyebrow">Calcolatore</p><h2 id="calculator-title">Inserisci i dati</h2><p>Bastano RAL e numero di mensilità. Non salviamo né inviamo i dati inseriti.</p></div>
           <form noValidate onSubmit={handleSubmit}>
-            <div className="field-group"><label htmlFor="ral">Retribuzione annua lorda (RAL)</label><p className="field-hint" id="ral-hint">Importo annuo lordo tra 25.000 e 100.000 euro.</p><div className={`input-shell ${error ? 'has-error' : ''}`}><span aria-hidden="true">€</span><input ref={inputRef} id="ral" name="ral" type="text" inputMode="decimal" autoComplete="off" value={ral} aria-invalid={error ? 'true' : 'false'} aria-describedby={`ral-hint${error ? ' ral-error' : ''}`} onChange={(event) => { setRal(event.target.value); invalidateResult(); if (error) setError(undefined) }} /></div>{error && <p className="field-error" id="ral-error" role="alert">{error}</p>}</div>
+            <div className="field-group"><label htmlFor="ral">Retribuzione annua lorda (RAL)</label><p className="field-hint" id="ral-hint">Importo annuo lordo tra {supportedRalRange} euro.</p><div className={`input-shell ${error ? 'has-error' : ''}`}><span aria-hidden="true">€</span><input ref={inputRef} id="ral" name="ral" type="text" inputMode="decimal" autoComplete="off" value={ral} aria-invalid={error ? 'true' : 'false'} aria-describedby={`ral-hint${error ? ' ral-error' : ''}`} onChange={(event) => { setRal(event.target.value); invalidateResult(); if (error) setError(undefined) }} /></div>{error && <p className="field-error" id="ral-error" role="alert">{error}</p>}</div>
             <fieldset><legend>Numero di mensilità</legend><div className="segmented-control">{([13, 14] as const).map((value) => <label key={value}><input type="radio" name="payments" value={value} checked={payments === value} onChange={() => { setPayments(value); invalidateResult() }} /><span>{value} mensilità</span></label>)}</div></fieldset>
             <div className="scenario-summary"><strong>Scenario applicato</strong><span>Dipendente privato, tempo pieno, residente a Milano per tutto il 2026.</span></div>
             <button ref={assumptionsTriggerRef} className="assumptions-link" type="button" aria-expanded={assumptionsOpen} aria-controls="assumptions" onClick={() => setAssumptionsOpen((current) => !current)}>{assumptionsOpen ? 'Nascondi le ipotesi utilizzate' : 'Vedi le ipotesi utilizzate'}</button>
@@ -152,7 +163,7 @@ function App() {
           </form>
         </section>
         {result && <Results result={result} />}
-        {assumptionsOpen && <section className="card assumptions" id="assumptions" ref={assumptionsRef} tabIndex={-1} aria-labelledby="assumptions-title"><div className="section-heading-row"><div><p className="eyebrow">Perimetro del calcolo</p><h2 id="assumptions-title">Cosa considera questa proiezione</h2></div><button className="text-button" type="button" onClick={closeAssumptions}>Chiudi</button></div><div className="assumptions-grid"><div><h3>Incluso</h3><ul><li>Regole fiscali 2026</li><li>Dipendente privato non dirigente, a tempo indeterminato e pieno, per 365 giorni</li><li>Residenza fiscale a Milano, Lombardia</li><li>Contributi previdenziali del dipendente</li><li>Detrazione per lavoro dipendente e detrazione cuneo fiscale previste</li></ul></div><div><h3>Non incluso</h3><ul><li>Trattamento integrativo e RAL inferiori a 25.000 o superiori a 100.000 euro</li><li>Anno parziale, part-time o variazioni di CCNL e contribuzione</li><li>Familiari a carico, detrazioni personali o aggiuntive e altri redditi</li><li>Voci di cedolino, ratei, saldi, conguagli e dichiarazione 730</li></ul></div></div></section>}
+        {assumptionsOpen && <section className="card assumptions" id="assumptions" ref={assumptionsRef} tabIndex={-1} aria-labelledby="assumptions-title"><div className="section-heading-row"><div><p className="eyebrow">Perimetro del calcolo</p><h2 id="assumptions-title">Cosa considera questa proiezione</h2></div><button className="text-button" type="button" onClick={closeAssumptions}>Chiudi</button></div><div className="assumptions-grid"><div><h3>Incluso</h3><ul><li>Regole fiscali 2026</li><li>Dipendente privato non dirigente, a tempo indeterminato e pieno, per 365 giorni</li><li>Residenza fiscale a Milano, Lombardia</li><li>Contributi previdenziali del dipendente</li><li>Detrazione per lavoro dipendente e detrazione cuneo fiscale previste</li></ul></div><div><h3>Non incluso</h3><ul><li>Trattamento integrativo e RAL inferiori a {minimumSupportedRal} o superiori a {maximumSupportedRal} euro</li><li>Anno parziale, part-time o variazioni di CCNL e contribuzione</li><li>Familiari a carico, detrazioni personali o aggiuntive e altri redditi</li><li>Voci di cedolino, ratei, saldi, conguagli e dichiarazione 730</li></ul></div></div></section>}
         <section className="card sources" aria-labelledby="sources-title"><p className="eyebrow">Trasparenza</p><h2 id="sources-title">Fonti ufficiali</h2><p>Regole efficaci per il {TAX_RULES_2026_SOURCE_METADATA.taxYear}, verificate il 23 agosto 2026.</p><ul>{Object.values(TAX_RULES_2026_SOURCE_METADATA.sources).map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer"><strong>{source.authority}</strong><span>{source.title}{source.instrument ? ` — ${source.instrument}` : ''}</span></a></li>)}</ul></section>
       </main>
       <footer className="page-width disclaimer">Questa simulazione fornisce una proiezione annuale basata sulle regole fiscali 2026 e sulle ipotesi dichiarate. Non costituisce un cedolino né una consulenza fiscale. Gli importi mensili effettivi possono variare.</footer>

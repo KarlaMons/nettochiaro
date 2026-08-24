@@ -97,3 +97,12 @@
 - CSP regression coverage asserts rectangle geometry/classes and verifies that the rendered UI contains no `style` attributes. The production Nginx policy remains `style-src 'self'`; no `unsafe-inline` allowance was added.
 - TDD evidence: focused tests first failed because the geometry helper was absent and the composition element was still an inline-styled `div`; both passed after the SVG implementation.
 - Reverification: `npm test` passed (14 files, 91 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; built output contains no inline `style=` attributes; `npm audit --audit-level=high` reported zero vulnerabilities; `git diff --check` passed.
+
+### UJ-01 pre-merge CI and boundary hardening
+
+- Centralized the UI's supported RAL validation, error, and hint range on `SUPPORTED_GROSS_ANNUAL_SALARY`; no fiscal formula or visible wording changed.
+- Added six integrated `calculateSalary` scenarios covering the Milano exemption transition, both upper IRPEF brackets, the exact EUR 56,224 contribution threshold, the 1% excess contribution, final net outcomes, and `RAL = netto + contributi + imposte` for every case. Component coverage also proves both centralized RAL bounds are accepted.
+- Added a read-only GitHub Actions workflow for pushes to `main` and `feature/**` plus Pull Requests to `main`. It uses commit-pinned official checkout/setup-node Actions, Node from `.nvmrc`, npm caching, and runs install, tests, typecheck, lint, production build, and a local-only Docker build.
+- Updated the canonical Comune di Milano source URL and public-state documentation. The README still declares the demo unavailable and contains no invented deployment URL.
+- **Security**: No secrets, write permissions, deployment, Docker publication, local paths, personal data, or provider-specific hosting references were added. The static architecture and input boundary are unchanged; `npm audit --audit-level=high` found zero vulnerabilities.
+- **Verification**: `npm test` passed (14 files, 99 tests); `npm run typecheck`, `npm run lint`, and `npm run build` passed; Vite transformed 29 modules; `docker build --no-cache -t nettochiaro-final-check .` passed with image `sha256:98747ebb3d1fcb9a09cf26fde5986d08a2cd664a27160131182dfb8083eae125`; `git diff --check` passed.

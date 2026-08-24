@@ -3,9 +3,9 @@
 ## Current State
 
 - **Project**: JetHR 2026 RAL-to-net calculator.
-- **Phase**: Delivery-ready locally; the foundation, deterministic 2026 engine, UJ-01 interface, and documented Docker delivery are complete.
-- **Last Completed Work Unit**: IT-03 — documented Docker delivery.
-- **Next Step**: User-managed review and optional external EasyPanel deployment; no deployment or push has been performed.
+- **Phase**: CI-backed review of the published UJ-01 Pull Request.
+- **Last Completed Work Unit**: UJ-01 pre-merge hardening — centralized RAL range, integrated threshold coverage, canonical source link, and read-only CI.
+- **Next Step**: Review Pull Request #1 checks and merge only after explicit user action. No external deployment has been performed.
 
 ## Scope and Decisions
 
@@ -13,6 +13,7 @@
 - The app is client-only, with no backend, persistence, authentication, or external runtime requests; a multi-stage Docker image serves only static assets through Nginx.
 - Root-level Vite source uses strict TypeScript, React, ESLint, Vitest, jsdom, and Testing Library.
 - The pure 2026 engine supports RAL from EUR 25,000 through EUR 100,000 inclusive and 13 or 14 monthly payments for the approved standard Milano/Lombardia employee scenario.
+- The UI imports that supported RAL range from the engine configuration; validation messages and guidance no longer maintain independent limit literals.
 - Fiscal constants and frozen rule-specific official-source provenance are centralized in `src/engine/taxRules2026.ts`; metadata distinguishes the 730/2026 reference to 2025 income from applicability of the unchanged employee-deduction formula in the approved 2026 projection. The 33% IRPEF rule is independently sourced to Law 199/2025 effective in 2026. Ratios intentionally retain full precision instead of the official first-four-decimal convention, and monetary values are formatted to two decimals only for display.
 - The supported scenario includes statutory employee and tax-wedge deductions but excludes personal/additional relief, dependents, other deductions, and trattamento integrativo. Italian-number grouping separators must be internally consistent.
 - UJ-01 is an Italian, mobile-first and keyboard-accessible single-page flow. It preserves the RAL as editable text, calculates only after valid submit, and renders annual/monthly KPIs, an accessible salary-composition bar, an adapter-driven formula reconciliation, assumptions, official sources, and the approved warning.
@@ -25,11 +26,13 @@
 - Base-image refreshes are manual and reviewed: update explicit tag, multi-architecture manifest digest, and pinned Alpine package versions together, then rebuild without cache and repeat all checks. EasyPanel read-only-root/`tmpfs` remains future hardening because the current documented App UI does not expose those settings.
 - `README.md`, `docs/CALCULATION_SPEC.md`, and `docs/VALIDATION.md` give the reviewer complete Italian product, formula, source, limitation, verification, and EasyPanel context.
 - `CLAUDE.md` remains the engineering governance source; `AGENTS.md` now reflects the current Vite/engine/Docker repository.
+- The public repository is `KarlaMons/nettochiaro`; Pull Request #1 compares `feature/ral-netto-2026` with `main`. GitHub Actions now verifies tests, types, lint, production build, and Docker build without secrets or write permissions.
 
 ## Blockers and Pending Decisions
 
 - No implementation blockers.
 - The public demo URL remains `Da aggiungere dopo il deployment`; external deployment is intentionally not performed in IT-03.
+- Pull Request #1 remains open and must not be merged as part of the current pre-merge hardening work.
 
 ## Key Files
 
@@ -48,3 +51,4 @@
 - `README.md`
 - `docs/CALCULATION_SPEC.md`, `docs/VALIDATION.md`, and `docs/security_checklist.md`
 - `Dockerfile`, `nginx.conf`, and `.dockerignore`
+- `.github/workflows/ci.yml`

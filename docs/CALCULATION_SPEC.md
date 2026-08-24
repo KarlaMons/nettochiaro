@@ -122,4 +122,4 @@ Il modello privilegia una stima annuale spiegabile e riconciliabile. Assume 9,19
 - [Agenzia delle Entrate, istruzioni 730/2026 per i redditi 2025, tabella 6, p. 149](https://infoprecompilata.agenziaentrate.gov.it/portale/documents/d/guest/730_istruzioni_2026.pdf)
 - [Agenzia delle Entrate, lavoro dipendente e pensioni](https://infoprecompilata.agenziaentrate.gov.it/portale/semplificata-mod-lavoro-dipendente-e-pensioni)
 - [Regione Lombardia, addizionale regionale IRPEF](https://www.regione.lombardia.it/bollo-auto-e-tributi-regionali/red-addizionale-regionale-irpef)
-- [Comune di Milano, addizionale comunale IRPEF](https://www.comune.milano.it/aree-tematiche/tributi/addizionale-comunale-irpef)
+- [Comune di Milano, addizionale comunale IRPEF](https://www.comune.milano.it/argomenti/tributi/addizionale-comunale-irpef)

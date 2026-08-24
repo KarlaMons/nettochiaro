@@ -81,6 +81,89 @@ describe('calculateSalary', () => {
     },
   )
 
+  it.each([
+    {
+      label: 'RAL minima con imponibile sotto la soglia Milano',
+      grossAnnualSalary: 25_000,
+      employeeContributions: 2_297.5,
+      taxableIncome: 22_702.5,
+      grossIrpef: 5_221.575,
+      municipalTax: 0,
+      annualNetSalary: 20_569.6505,
+    },
+    {
+      label: 'RAL con imponibile sopra la soglia Milano',
+      grossAnnualSalary: 26_000,
+      employeeContributions: 2_389.4,
+      taxableIncome: 23_610.6,
+      grossIrpef: 5_430.438,
+      municipalTax: 188.8848,
+      annualNetSalary: 20_982.528643076923,
+    },
+    {
+      label: 'imponibile oltre il primo scaglione IRPEF',
+      grossAnnualSalary: 31_000,
+      employeeContributions: 2_848.9,
+      taxableIncome: 28_151.1,
+      grossIrpef: 6_489.863,
+      municipalTax: 225.2088,
+      annualNetSalary: 24_005.41105272727,
+    },
+    {
+      label: 'imponibile oltre il secondo scaglione IRPEF',
+      grossAnnualSalary: 56_000,
+      employeeContributions: 5_146.4,
+      taxableIncome: 50_853.6,
+      grossIrpef: 14_067.048,
+      municipalTax: 406.8288,
+      annualNetSalary: 35_596.65592,
+    },
+    {
+      label: 'soglia contributiva aggiuntiva inclusa',
+      grossAnnualSalary: 56_224,
+      employeeContributions: 5_166.9856,
+      taxableIncome: 51_057.0144,
+      grossIrpef: 14_154.516192,
+      municipalTax: 408.4561152,
+      annualNetSalary: 35_707.45574368,
+    },
+    {
+      label: 'contributo aggiuntivo su RAL oltre soglia',
+      grossAnnualSalary: 60_000,
+      employeeContributions: 5_551.76,
+      taxableIncome: 54_448.24,
+      grossIrpef: 15_612.7432,
+      municipalTax: 435.58592,
+      annualNetSalary: 37_554.656328,
+    },
+  ])(
+    'calculates the integrated case: $label',
+    ({
+      grossAnnualSalary,
+      employeeContributions,
+      taxableIncome,
+      grossIrpef,
+      municipalTax,
+      annualNetSalary,
+    }) => {
+      const result = calculateSalary({ grossAnnualSalary, monthlyPayments: 13 })
+
+      expect(result.employeeContributions).toBeCloseTo(
+        employeeContributions,
+        10,
+      )
+      expect(result.taxableIncome).toBeCloseTo(taxableIncome, 10)
+      expect(result.grossIrpef).toBeCloseTo(grossIrpef, 10)
+      expect(result.municipalTax).toBeCloseTo(municipalTax, 10)
+      expect(result.annualNetSalary).toBeCloseTo(annualNetSalary, 10)
+      expect(
+        result.annualNetSalary +
+          result.employeeContributions +
+          result.totalTaxes,
+      ).toBeCloseTo(grossAnnualSalary, 10)
+    },
+  )
+
   it('reports percentages against gross annual salary and reconciles', () => {
     const result = calculateSalary({
       grossAnnualSalary: 30_000,

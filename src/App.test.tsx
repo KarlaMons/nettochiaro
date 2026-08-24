@@ -4,8 +4,11 @@ import { describe, expect, it, vi } from 'vitest'
 
 import App from './App'
 import * as salaryEngine from './engine/calculateSalary'
+import { SUPPORTED_GROSS_ANNUAL_SALARY } from './engine/taxRules2026'
 
 const title = 'Dalla RAL al netto, con i calcoli in chiaro'
+const supportedRalRange = `${SUPPORTED_GROSS_ANNUAL_SALARY.minimum.toLocaleString('it-IT')} e ${SUPPORTED_GROSS_ANNUAL_SALARY.maximum.toLocaleString('it-IT')}`
+const rangeError = `Inserisci una RAL compresa tra ${supportedRalRange} euro.`
 
 async function submitWithSalary(value: string, payments: 13 | 14 = 13) {
   const user = userEvent.setup()
@@ -144,8 +147,8 @@ describe('App', () => {
     ['', 'Inserisci la RAL.'],
     ['trentamila', 'Inserisci un importo numerico valido.'],
     ['-30000', 'Inserisci una RAL maggiore di zero.'],
-    ['24999', 'Inserisci una RAL compresa tra 25.000 e 100.000 euro.'],
-    ['100001', 'Inserisci una RAL compresa tra 25.000 e 100.000 euro.'],
+    [String(SUPPORTED_GROSS_ANNUAL_SALARY.minimum - 1), rangeError],
+    [String(SUPPORTED_GROSS_ANNUAL_SALARY.maximum + 1), rangeError],
   ])('rejects invalid RAL %j with an associated error and no results', async (value, error) => {
     const calculateSpy = vi.spyOn(salaryEngine, 'calculateSalary')
     render(<App />)
@@ -158,6 +161,19 @@ describe('App', () => {
     expect(screen.queryByText('Netto annuale stimato')).not.toBeInTheDocument()
     expect(calculateSpy).not.toHaveBeenCalled()
     calculateSpy.mockRestore()
+  })
+
+  it.each([
+    SUPPORTED_GROSS_ANNUAL_SALARY.minimum,
+    SUPPORTED_GROSS_ANNUAL_SALARY.maximum,
+  ])('accepts the centralized supported RAL boundary %s', async (value) => {
+    render(<App />)
+
+    const { input } = await submitWithSalary(String(value))
+
+    expect(input).toHaveAttribute('aria-invalid', 'false')
+    expect(screen.getByText(`Importo annuo lordo tra ${supportedRalRange} euro.`)).toBeInTheDocument()
+    expect(screen.getByText('Netto annuale stimato')).toBeInTheDocument()
   })
 
   it('expands a formula with source metadata and updates disclosure semantics', async () => {

@@ -148,7 +148,7 @@ export const TAX_RULES_2026_SOURCE_METADATA: TaxRuleSourceMetadata =
         authority: 'Comune di Milano',
         title: 'Addizionale comunale IRPEF',
         instrument: 'Aliquota ed esenzione dell’addizionale comunale IRPEF',
-        url: 'https://www.comune.milano.it/aree-tematiche/tributi/addizionale-comunale-irpef',
+        url: 'https://www.comune.milano.it/argomenti/tributi/addizionale-comunale-irpef',
         effectiveYear: 2026,
         verifiedOn: '2026-08-23',
       }),
