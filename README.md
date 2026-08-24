@@ -2,7 +2,11 @@
 
 Un revisore Jet HR può usare questa applicazione per trasformare una RAL in una stima trasparente del netto annuale e della media mensile. Il risultato non è una “scatola nera”: contributi, imponibile, IRPEF, detrazioni e addizionali sono riconciliati riga per riga.
 
-**Demo:** Da aggiungere dopo il deployment
+## Demo online
+
+[Apri il calcolatore NettoChiaro](https://nettochiaro.karlamonsalvo.cloud) · [Healthcheck](https://nettochiaro.karlamonsalvo.cloud/healthz)
+
+Il prototipo è pubblicato su una VPS tramite EasyPanel e Docker.
 
 ## Scenario supportato
 
